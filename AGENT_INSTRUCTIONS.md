@@ -1,106 +1,182 @@
-# Instrucciones: Meta-Optimizer + Segunda Pasada
+# Instrucciones: Conversion a XML
+
+<important_paths>
+BEFORE starting any work, confirm you can access BOTH paths:
+
+1. Omega Optimizer skill (Task A):
+   C:\Users\negro\.gemini\antigravity\skills\omega-optimizer\SKILL.md
+
+2. Rust repo skills (Task B):
+   C:\Users\negro\Sol\proyectos\rust-ai-governance-pack\.agent\skills\
+
+Write in AGENT_NOTES.md:
+- "Task A file accessible: YES/NO"
+- "Task B files accessible: YES/NO"
+
+If Task A file is NOT accessible, skip Task A and do Task B only.
+</important_paths>
 
 <role>
 You have TWO tasks in sequence. Complete Task A FULLY before starting Task B.
-Task A: Improve the Omega Optimizer process itself.
-Task B: Use the improved optimizer to do a second pass on all 9 skills.
+Task A: Convert the Omega Optimizer skill to XML structure.
+Task B: Convert the 9 Rust skills in this repo to XML structure.
 </role>
 
 <constraints>
 - Complete Task A FULLY before starting Task B
 - Document ALL work in AGENT_NOTES.md (clear it first — write fresh)
-- You may ONLY modify files inside `.agent/skills/` and `AGENT_INSTRUCTIONS.md`
-- NEVER delete existing content — only restructure and enhance
+- NEVER delete content — restructure using XML tags while preserving all rules
+- XML tags guide AI parsing. Keep content in natural language inside the tags.
 - After EACH task, run: `.\tools\verify-agent-work.ps1`
 - NEVER say "done" until BOTH tasks are complete
 </constraints>
 
----
-
-# TASK A: Meta-Optimize the Optimizer
-
-<objective>
-Evaluate and improve the Omega Optimizer process (this file's methodology).
-You are optimizing HOW the optimization is done, not the skills themselves.
-</objective>
-
-<task_a_process>
-## A1. Read the previous Omega Optimizer audit
-Read the PREVIOUS `AGENT_NOTES.md` content (it was cleared but the pattern is in git history).
-Read the skill files in `.agent/skills/` to understand what the optimizer produced.
-
-## A2. Evaluate the Omega Optimizer methodology from 3 perspectives:
-
-### CIRUJANO (Structure Expert)
-- Are the 5 evaluation perspectives sufficient? Missing any?
-- Are the 8 scoring dimensions the right ones? Should any be added/removed?
-- Is the step-by-step process efficient or does it have unnecessary steps?
-- Is the verification checkpoint system robust?
-
-### FISCAL (Critic)
-- What did the optimizer MISS in the first pass? (Read the skills — find gaps)
-- Where are the instructions ambiguous?
-- What allowed the optimizer to give high scores to mediocre improvements?
-- What quality problems persist in the skills despite optimization?
-
-### JUEZ (Decision Maker)
-- Based on Cirujano's analysis and Fiscal's criticism:
-- Which improvements to the methodology should be adopted?
-- Which should be rejected (over-engineering)?
-- Write the IMPROVED methodology
-
-## A3. Write the improved Omega Optimizer v2
-In AGENT_NOTES.md, write the complete improved methodology under:
-```
-## Omega Optimizer v2 (Improved)
-[complete methodology here]
-```
-
-## A4. Mark Task A as [x] in AGENT_NOTES.md
-</task_a_process>
+<why_xml>
+XML tags help AI agents follow instructions more precisely because:
+1. Clear section boundaries — AI knows exactly where rules start/end
+2. Hierarchy — nested tags show priority and relationships
+3. Parseable — AI can extract specific sections without reading everything
+4. Proven — AGENT_INSTRUCTIONS.md used XML and agents followed it perfectly
+</why_xml>
 
 ---
 
-# TASK B: Second Pass with Improved Optimizer
+# TASK A: Convert Omega Optimizer to XML
 
-<objective>
-Using the improved Omega Optimizer v2 methodology you just created,
-run a SECOND optimization pass on all 9 skills.
-Focus ONLY on what the first pass missed.
-</objective>
+<source_file>
+C:\Users\negro\.gemini\antigravity\skills\omega-optimizer\SKILL.md
+</source_file>
 
-<task_b_process>
-## B1. For each skill (9 total):
-1. Read the current SKILL.md
-2. Apply your improved Omega v2 methodology
-3. Focus on:
-   - Gaps the first optimizer missed
-   - Weak language that survived ("consider", "try to", "where possible")
-   - Missing edge cases
-   - Missing code examples for critical rules
-   - Rules that contradict between skills
-4. Score BEFORE and AFTER on your improved dimensions
-5. Mark [x] in AGENT_NOTES.md
+<task_a_instructions>
+1. Read the entire Omega Optimizer SKILL.md
+2. Restructure it using XML tags. The structure should be:
 
-## B2. Final summary table
+```xml
+<skill name="omega-optimizer" version="3.0">
+  <description>...</description>
+
+  <workflow>
+    <phase name="diagnosis">...</phase>
+    <phase name="research">...</phase>
+    <phase name="repair">...</phase>
+    <phase name="verification">...</phase>
+    <phase name="adversarial">...</phase>
+  </workflow>
+
+  <agents>
+    <agent id="1" name="analyst">
+      <role>...</role>
+      <objective>...</objective>
+      <instructions>...</instructions>
+      <tools>...</tools>
+      <constraints>...</constraints>
+      <inputs>...</inputs>
+      <outputs>...</outputs>
+      <success_criteria>...</success_criteria>
+    </agent>
+    <!-- repeat for all 5 agents -->
+  </agents>
+
+  <dimensions count="10">
+    <dimension id="1" name="clarity">...</dimension>
+    <!-- repeat for all 10 -->
+  </dimensions>
+
+  <scoring>
+    <scale min="0" max="10" />
+    <total max="100" />
+    <levels>
+      <level range="0-30" label="critical" />
+      <level range="31-50" label="improvable" />
+      <level range="51-75" label="good" />
+      <level range="76-100" label="excellent" />
+    </levels>
+  </scoring>
+
+  <usage>
+    <basic>...</basic>
+    <advanced>...</advanced>
+  </usage>
+
+  <lessons_learned>...</lessons_learned>
+</skill>
 ```
-## Second Pass Results
-| Skill | Before (v1 score) | After (v2 score) | Delta | Key fixes |
-|-------|-------------------|-------------------|-------|-----------|
+
+3. Keep YAML frontmatter at the top (required by the system)
+4. Keep ALL content — just wrap it in XML tags
+5. Test that it is valid XML structure (tags properly opened/closed)
+6. Mark [x] Task A in AGENT_NOTES.md
+</task_a_instructions>
+
+---
+
+# TASK B: Convert 9 Rust Skills to XML
+
+<task_b_instructions>
+1. For each of the 9 skills in `.agent/skills/*/SKILL.md`:
+2. Restructure using XML tags. The structure for REFERENCE skills is:
+
+```xml
+<skill name="skill-name">
+  <description>...</description>
+  <when_to_use>...</when_to_use>
+  <inherits from="rust-core" />  <!-- if applicable -->
+
+  <critical_rules>
+    <rule id="1" level="ALWAYS">...</rule>
+    <rule id="2" level="NEVER">...</rule>
+  </critical_rules>
+
+  <sections>
+    <section name="...">
+      <content>...</content>
+      <code_example language="rust">...</code_example>
+    </section>
+  </sections>
+
+  <common_mistakes>
+    <mistake id="1">
+      <wrong>...</wrong>
+      <right>...</right>
+    </mistake>
+  </common_mistakes>
+
+  <verification_checkpoints>
+    <checkpoint id="1" command="...">...</checkpoint>
+  </verification_checkpoints>
+
+  <scalability>
+    <level size="small">...</level>
+    <level size="large">...</level>
+  </scalability>
+
+  <integration>
+    <related_skill name="..." relationship="..."/>
+  </integration>
+</skill>
 ```
 
-## B3. Run verification
-Run: `.\tools\verify-agent-work.ps1`
-Paste output in AGENT_NOTES.md
+3. Keep YAML frontmatter at the top
+4. Keep ALL existing content
+5. Mark [x] per skill in AGENT_NOTES.md
+</task_b_instructions>
 
-## B4. Write COMPLETADO at the end
-</task_b_process>
+<skills_list>
+1. rust-compile-loop
+2. rust-core
+3. rust-error-triage
+4. rust-kata-coach
+5. rust-refactor-safely
+6. rust-supply-chain
+7. rust-testing
+8. rust-unsafe
+9. rust-verifier
+</skills_list>
 
 <success_criteria>
 COMPLETE only when:
-1. Task A: Improved methodology written in AGENT_NOTES.md
-2. Task B: All 9 skills processed with v2 methodology  
-3. Before/after scores for all 9 skills
-4. verify-agent-work.ps1 output pasted showing PASS
-5. "COMPLETADO" at bottom of AGENT_NOTES.md
+1. Task A: Omega Optimizer converted to XML structure
+2. Task B: All 9 skills converted to XML structure
+3. verify-agent-work.ps1 output pasted showing PASS
+4. "COMPLETADO" at bottom of AGENT_NOTES.md
 </success_criteria>

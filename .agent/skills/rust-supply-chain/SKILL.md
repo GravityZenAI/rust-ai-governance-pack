@@ -3,69 +3,113 @@ name: rust-supply-chain
 description: Prevent vulnerable or risky dependencies from entering the build.
 ---
 
-# Skill: Rust Supply Chain Hardening
+<skill name="rust-supply-chain">
 
-> Inherits all rules from `rust-core`. This skill adds dependency governance.
+<description>Prevent vulnerable or risky dependencies from entering the build.</description>
 
-## When to use
+<when_to_use>
 - ALWAYS activate when `Cargo.toml` or dependency versions change.
 - ALWAYS activate before adding any new crate.
 - Complements `rust-verifier` — this handles dependency risk, verifier handles code quality.
+</when_to_use>
 
-## Critical rules
-1. NEVER add a new crate if the standard library provides equivalent functionality.
-2. ALWAYS use `default-features = false` and enable only the features you need.
-3. ALWAYS document every dependency decision in `docs/ai/DECISIONS.md`.
-4. NEVER ignore `cargo audit` findings — fix, replace, or document the risk.
+<inherits from="rust-core" />
 
-## Required checks before merging
+<critical_rules>
+<rule id="1" level="NEVER">Add a new crate if the standard library provides equivalent functionality.</rule>
+<rule id="2" level="ALWAYS">Use `default-features = false` and enable only the features you need.</rule>
+<rule id="3" level="ALWAYS">Document every dependency decision in `docs/ai/DECISIONS.md`.</rule>
+<rule id="4" level="NEVER">Ignore `cargo audit` findings — fix, replace, or document the risk.</rule>
+</critical_rules>
 
+<sections>
+
+<section name="required-checks">
+<content>
 | Check | Command | Action on failure |
 |-------|---------|-------------------|
 | Known vulnerabilities | `cargo audit` | Update, replace, or document waiver |
-| License & ban policy | `cargo deny check` | Remove banned crate or request exception |
+| License &amp; ban policy | `cargo deny check` | Remove banned crate or request exception |
 | Supply chain review | `cargo vet` (if configured) | Audit the crate or find a vetted alternative |
+</content>
+</section>
 
-## Example: adding a dependency correctly
-
-```toml
+<section name="example">
+<code_example language="toml">
 # Cargo.toml — CORRECT
 [dependencies]
 serde = { version = "1", default-features = false, features = ["derive"] }
 
 # WRONG — pulls in ALL features unnecessarily
 # serde = "1"
-```
+</code_example>
+</section>
 
-## What to document in DECISIONS.md
-
-For every new dependency, record:
+<section name="documentation-requirements">
+<content>
+For every new dependency, record in DECISIONS.md:
 - **Why this crate**: what problem it solves
 - **Alternatives considered**: at least one and why rejected
 - **License**: compatible with project license?
 - **Feature flags**: which are enabled and why
 - **Risk assessment**: maintenance status, unsafe count, transitive deps
+</content>
+</section>
 
-## Red flags (NEVER accept without justification)
+<section name="red-flags">
+<content>
+NEVER accept without justification:
 - Unmaintained crates (no commits in 12+ months)
 - Many `unsafe` lines in transitive deps for a simple task
 - Duplicate major versions of the same crate
 - Network or crypto crates with low scrutiny
 - Yanked versions in the dependency tree
+</content>
+</section>
 
-## Feature flag discipline
+<section name="cargo-hygiene">
+<content>
 - Gate optional functionality behind feature flags.
 - In workspaces: `[workspace.dependencies]` for version inheritance.
-
-## Cargo.toml hygiene
 - `#![warn(clippy::cargo)]` to catch manifest issues.
 - `cargo update --dry-run` periodically to check for updates.
+</content>
+</section>
 
-## Common mistakes
+</sections>
 
-| Mistake | Fix |
-|---------|-----|
-| Adding `serde` with all features on | Use `default-features = false, features = ["derive"]` |
-| Not checking license compatibility | Always run `cargo deny check licenses` before merging |
-| Ignoring `cargo audit` because "it's a dev dependency" | Dev deps can still run arbitrary code during build |
+<common_mistakes>
+<mistake id="1">
+<wrong>Adding `serde` with all features on</wrong>
+<right>Use `default-features = false, features = ["derive"]`</right>
+</mistake>
+<mistake id="2">
+<wrong>Not checking license compatibility</wrong>
+<right>Always run `cargo deny check licenses` before merging</right>
+</mistake>
+<mistake id="3">
+<wrong>Ignoring `cargo audit` because "it's a dev dependency"</wrong>
+<right>Dev deps can still run arbitrary code during build</right>
+</mistake>
+</common_mistakes>
 
+<verification_checkpoints>
+<checkpoint id="1" command="cargo audit">0 vulnerabilities (or all have documented waivers in DECISIONS.md)</checkpoint>
+<checkpoint id="2" command="cargo deny check">Passes for licenses and bans</checkpoint>
+<checkpoint id="3" command="cat docs/ai/DECISIONS.md">Every new Cargo.toml entry has a corresponding decision entry</checkpoint>
+<checkpoint id="4" command="cargo tree -d">No duplicate major versions (or all documented)</checkpoint>
+</verification_checkpoints>
+
+<scalability>
+<level size="small" deps="&lt;10">Review each dependency manually — feasible</level>
+<level size="medium" deps="10-50">Automate with `cargo deny` config; review only new additions</level>
+<level size="large" deps="50+" workspace="true">Use `[workspace.dependencies]` for version control; automate audits in CI</level>
+<level size="open-source">Add `cargo vet` for community-driven supply chain review</level>
+</scalability>
+
+<integration>
+<related_skill name="rust-core" relationship="inherits" />
+<related_skill name="rust-verifier" relationship="dependency-gate" />
+</integration>
+
+</skill>
