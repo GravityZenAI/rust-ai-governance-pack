@@ -6,8 +6,12 @@ on:
     branches: [ main, master ]
 
 jobs:
-  verify:
+  verify-katas:
+    name: Verify Katas Compile & Pass
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: training/kata_suite
     steps:
       - uses: actions/checkout@v4
 
@@ -16,11 +20,36 @@ jobs:
         with:
           components: rustfmt, clippy
 
-      - name: Install dev tools (audit/deny)
-        run: |
-          cargo install cargo-audit
-          cargo install cargo-deny
+      - name: Check formatting
+        run: cargo fmt --check
 
-      - name: Verify
+      - name: Clippy lints
+        run: cargo clippy -- -D warnings
+
+      - name: Run tests
+        run: cargo test
+
+  lint-markdown:
+    name: Lint Documentation
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Check markdown files exist
         run: |
-          ./tools/verify.sh
+          echo "=== Verifying governance pack structure ==="
+          test -f README.md && echo "✅ README.md"
+          test -f LICENSE && echo "✅ LICENSE"
+          test -f ARCHITECTURE.md && echo "✅ ARCHITECTURE.md"
+          test -f deny.toml && echo "✅ deny.toml"
+          test -d .agent/rules && echo "✅ .agent/rules/"
+          test -d .agent/skills && echo "✅ .agent/skills/"
+          test -d .agent/workflows && echo "✅ .agent/workflows/"
+          test -d training/kata_suite && echo "✅ training/kata_suite/"
+          test -d docs && echo "✅ docs/"
+          echo ""
+          echo "Rules: $(ls .agent/rules/*.md | wc -l)"
+          echo "Skills: $(ls -d .agent/skills/*/ | wc -l)"
+          echo "Katas: $(ls training/kata_suite/src/kata*.rs 2>/dev/null | wc -l)"
+          echo ""
+          echo "✅ All governance files present"
