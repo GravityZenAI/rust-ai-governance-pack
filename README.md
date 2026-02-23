@@ -119,32 +119,38 @@ cat prompts/RUST_TASK_TEMPLATE.md
 
 ```mermaid
 flowchart TD
-    A[You give a task to AI agent] --> B{Agent reads .agent/rules/}
-    B --> C[Agent loads relevant skills]
-    C --> D[Agent writes code + tests]
-    D --> E[Agent runs tools/verify.sh]
+    A["🎯 You give a task to AI agent"] --> B{"Agent reads .agent/rules/"}
+    B --> C["Agent loads relevant skills"]
+    C --> D["Agent writes code + tests"]
+    D --> E["Agent runs tools/verify.sh"]
     
-    E --> F1[cargo fmt --check]
-    E --> F2[cargo clippy -D warnings]
-    E --> F3[cargo test]
-    E --> F4[cargo audit]
-    E --> F5[cargo deny check]
+    E --> F1["cargo fmt --check"]
+    E --> F2["cargo clippy -D warnings"]
+    E --> F3["cargo test"]
+    E --> F4["cargo audit"]
+    E --> F5["cargo deny check"]
     
-    F1 --> G{All green?}
+    F1 --> G{"All green?"}
     F2 --> G
     F3 --> G
     F4 --> G
     F5 --> G
     
-    G -->|No| D
-    G -->|Yes| H{unsafe detected?}
+    G -->|"❌ No"| D
+    G -->|"✅ Yes"| H{"unsafe detected?"}
     
-    H -->|Yes| I[cargo +nightly miri test]
-    I --> J{Miri passes?}
-    J -->|No| D
-    J -->|Yes| K[✅ Task DONE with evidence]
+    H -->|"Yes"| I["cargo +nightly miri test"]
+    I --> J{"Miri passes?"}
+    J -->|"❌ No"| D
+    J -->|"✅ Yes"| K["✅ Task DONE with evidence"]
     
-    H -->|No| K
+    H -->|"No"| K
+
+    style A fill:#CE422B,stroke:#fff,color:#fff
+    style K fill:#2ea043,stroke:#fff,color:#fff
+    style G fill:#1a1a2e,stroke:#00d4ff,color:#fff
+    style H fill:#1a1a2e,stroke:#ff6b35,color:#fff
+    style J fill:#1a1a2e,stroke:#ff6b35,color:#fff
 ```
 
 ## What's Inside
@@ -276,19 +282,45 @@ cd training/kata_suite && cargo test
 
 **Kata Pass Rate** = (passed / attempted) × 100% — Use this to measure your AI agent's Rust competency. See [KATA_RUBRIC.md](docs/KATA_RUBRIC.md) for scoring details.
 
-## Why Rust + AI Needs Governance
+## Why This Exists
+
+<table>
+<tr>
+<td width="50%">
+
+### ❌ Without Governance
 
 ```
-Without governance:                    With governance:
-                                       
-AI writes code ──→ "looks good" ──→ 🤞  AI writes code ──→ verify.sh ──→ ✅/❌
-                                       │                                    │
-Result: Hope-based development          │    ❌ → Fix → Re-verify → Loop    │
-                                       │    ✅ → Evidence-based DONE        │
-                                       Result: Verifiable development
+AI writes code
+     ↓
+"looks good to me"
+     ↓
+🤞 Hope-based development
+     ↓
+💀 Bugs in production
 ```
 
-**Key insight:** Rust correctness is not a belief — it's a chain of objective gates. The compiler is your first judge, but `clippy`, `miri`, `cargo-audit`, and `cargo-deny` complete the picture.
+</td>
+<td width="50%">
+
+### ✅ With Governance
+
+```
+AI writes code
+     ↓
+verify.sh runs 7 gates
+     ↓
+❌ → Fix → Re-verify → Loop
+✅ → Evidence-based DONE
+     ↓
+🛡️ Verifiable development
+```
+
+</td>
+</tr>
+</table>
+
+> **Key insight:** Rust correctness is not a belief — it's a chain of objective gates. The compiler is your first judge, but `clippy`, `miri`, `cargo-audit`, and `cargo-deny` complete the picture.
 
 ## Contributing
 
