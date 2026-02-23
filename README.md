@@ -1,5 +1,7 @@
 <div align="center">
 
+<img src="assets/banner.png" alt="Rust AI Governance Pack" width="100%">
+
 # Rust AI Governance Pack
 
 ### Stop hoping your AI writes correct Rust. Start verifying it.
