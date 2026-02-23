@@ -5,15 +5,11 @@ description: Incremental Rust implementation using compiler/tests/clippy/fmt as 
 
 # Rust Compile Loop
 
+> Inherits all rules from `rust-core`. This skill adds the incremental compile-fix loop.
+
 ## When to use
 - Any task that modifies `.rs` files.
-- Use this skill for **incremental implementation**. For full verification of finished work, use `rust-verifier`.
-
-## Critical rules (read first)
-- ALWAYS prefer `&T` / `&mut T` over `.clone()` — only clone when the borrow checker demands it.
-- ALWAYS return `Result<T, E>` for fallible operations — NEVER panic on expected errors.
-- ALWAYS use the `?` operator for error propagation — NEVER use manual `match` on `Result` unless adding context.
-- Accept `&[T]` instead of `&Vec<T>`, and `&str` instead of `&String` in function parameters.
+- For **incremental implementation**. For final verification, use `rust-verifier`.
 
 ## Operating protocol
 
@@ -40,14 +36,33 @@ description: Incremental Rust implementation using compiler/tests/clippy/fmt as 
 
 | Error type | Fix strategy |
 |------------|-------------|
-| Borrow checker (E0382, E0505) | Reduce scope; introduce bindings; reorder operations. |
-| Type mismatch (E0308) | Print/inspect types; add explicit annotations only where needed. |
-| Trait not satisfied (E0277) | Add bounds or implement the trait; do NOT over-generalize. |
-| Incompatible error types | Implement `From` or use `.map_err()`. |
-| Format/clippy | Run `cargo fmt` to fix; for clippy, apply the suggested fix or add `#[allow()]` with justification. |
+| Borrow checker (E0382, E0505) | Reduce scope; introduce bindings; reorder operations |
+| Type mismatch (E0308) | Inspect types; add annotations only where needed |
+| Trait not satisfied (E0277) | Add bounds or implement the trait; do NOT over-generalize |
+| Incompatible error types | Implement `From` or use `.map_err()` |
+| Format/clippy | `cargo fmt` to fix; for clippy, apply the fix or `#[allow()]` with justification |
 
-## Ownership rules during implementation
+## Example: fixing a borrow checker error
 
-- Use `Cow<'a, T>` when a function must sometimes own and sometimes borrow data.
-- If you clone to satisfy the borrow checker, first try reducing the scope of the borrow.
+```rust
+// WRONG — borrow lives too long
+fn process(data: &mut Vec<i32>) -> &i32 {
+    data.push(42);
+    data.last().unwrap()  // borrows data while we just mutated it
+}
+
+// RIGHT — introduce a binding to reduce borrow scope
+fn process(data: &mut Vec<i32>) -> i32 {
+    data.push(42);
+    *data.last().unwrap()  // copy the value, borrow ends
+}
+```
+
+## Common mistakes
+
+| Mistake | Fix |
+|---------|-----|
+| Trying to fix ALL errors at once | Fix ONLY the first error — later ones are often cascading |
+| Adding `.clone()` to silence the borrow checker | Try reducing borrow scope first; clone only as last resort |
+| Skipping `--fast` and running full verify every time | Use `--fast` during iteration, full verify only once at the end |
 

@@ -5,16 +5,11 @@ description: Run and solve Rust katas with compiler-driven feedback and scoring.
 
 # Rust Kata Coach
 
+> Inherits all rules from `rust-core`. This skill adds the kata coaching loop.
+
 ## When to use
 - Training exercises in `training/kata_suite`.
 - For error diagnosis during katas, use `rust-error-triage`.
-
-## Rules for kata solutions
-1. ALWAYS prefer `&T` over `.clone()` — the borrow checker is teaching ownership.
-2. ALWAYS use `&[T]` instead of `&Vec<T>`, and `&str` instead of `&String`.
-3. ALWAYS return `Result<T, E>` for fallible operations — NEVER panic.
-4. ALWAYS use `?` for error propagation.
-5. ALWAYS name tests descriptively: `test_empty_input_returns_none`, not `test1`.
 
 ## How to run
 
@@ -33,12 +28,31 @@ cargo test
    - If a new error pattern was encountered, add it to `ERROR_PATTERNS.md`.
 5. If ALL tests fail, start with the simplest test (shortest name or first alphabetically).
 
+## Example: idiomatic kata solution
+
+```rust
+// WRONG — fighting the borrow checker
+fn longest(words: &Vec<String>) -> String {
+    let mut best = words[0].clone();
+    for w in words {
+        if w.len() > best.len() { best = w.clone(); }
+    }
+    best
+}
+
+// RIGHT — idiomatic Rust
+fn longest(words: &[String]) -> &str {
+    words.iter().max_by_key(|w| w.len()).map(|w| w.as_str()).unwrap_or("")
+}
+```
+
 ## Test structure in katas
 
 - Follow Arrange/Act/Assert:
   1. **Arrange**: set up input data.
   2. **Act**: call the function under test.
   3. **Assert**: check the result.
+- Pattern: `test_<function>_<scenario>_<expected_result>`
 
 ## Scoring
 
@@ -46,4 +60,12 @@ cargo test
 |--------|----------|
 | PASS | All tests green + `cargo fmt --check` green + `cargo clippy` green |
 | FAIL | Any compile error, failing test, clippy warning, or fmt drift |
+
+## Common mistakes
+
+| Mistake | Fix |
+|---------|-----|
+| Fixing multiple tests at once | Fix ONE test, verify, then move to the next |
+| Using `.clone()` to pass every kata | First solve idiomatically; clone only if borrowing fails |
+| Not recording the learning | ALWAYS write a 1-line learning note — it builds ERROR_PATTERNS.md |
 

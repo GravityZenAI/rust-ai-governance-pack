@@ -1,10 +1,17 @@
+---
+name: rust-verifier
+description: Verification loop ensuring correctness through external judges (compiler, clippy, tests, audit).
+---
+
 # Skill: Rust Verifier Loop
 
+> Inherits all rules from `rust-core`. This skill adds the verification gate system.
+
 ## When to use
-Use this skill to **verify finished work**:
+- **Final verification** of finished work.
 - After editing `.rs` files, `Cargo.toml`, or `Cargo.lock`.
 - After touching FFI, concurrency, parsing/serialization, crypto, auth, or I/O.
-- For incremental implementation, use `rust-compile-loop` instead. This skill is for **final verification**.
+- For incremental implementation, use `rust-compile-loop` instead.
 
 ## Critical rules
 1. NEVER fabricate tool output — every claim MUST have evidence.
@@ -20,8 +27,8 @@ Use this skill to **verify finished work**:
 | Tests | `cargo test` | Fix failing test, use `rust-testing` |
 | Lints | `cargo clippy` | Fix lint or justify `#[allow()]` |
 | Formatting | `cargo fmt --check` | Run `cargo fmt`, commit |
-| Dependencies | `cargo audit` + `cargo deny` | Use `rust-supply-chain` skill |
-| UB detection | `cargo +nightly miri test` | Use `rust-unsafe` skill |
+| Dependencies | `cargo audit` + `cargo deny` | Use `rust-supply-chain` |
+| UB detection | `cargo +nightly miri test` | Use `rust-unsafe` |
 
 ## Procedure
 
@@ -40,10 +47,22 @@ Use this skill to **verify finished work**:
    - Repeat until ALL gates are green.
 6. Produce final output using `.agent/rules/01-rust-output-format.md`.
 
+## Example: verify.sh output interpretation
+
+```
+$ ./scripts/verify.sh
+[PASS] cargo check
+[PASS] cargo test
+[FAIL] cargo clippy -- warning: unused variable `x`
+       ^^^ Fix this before proceeding
+[PASS] cargo fmt --check
+
+# Action: fix the clippy warning, then re-run
+```
+
 ## When stuck
-- Use compiler diagnostics as ground truth.
-- Run `rustc --explain <CODE>` (e.g., `rustc --explain E0502`).
-- If a design is unclear, propose 2 options with tradeoffs, pick one, implement.
+- `rustc --explain <CODE>` for detailed error explanations.
+- Propose 2 options with tradeoffs, pick one, implement.
 
 ## Required lint levels
 
@@ -53,7 +72,7 @@ Use this skill to **verify finished work**:
 #![warn(clippy::perf)]             // Performance footguns
 ```
 
-For workspaces: configure at `[workspace.lints]` so all crates inherit the same policy.
+Workspaces: configure at `[workspace.lints]` so all crates inherit the same policy.
 
 ## Release profile
 
@@ -66,4 +85,12 @@ codegen-units = 1
 ## Performance principle
 - ALWAYS profile before optimizing. NEVER guess the bottleneck.
 - Correctness and tests come first, performance second.
+
+## Common mistakes
+
+| Mistake | Fix |
+|---------|-----|
+| Fabricating "all gates passed" without running verify.sh | ALWAYS run the script and paste real output |
+| Rationalizing a clippy warning as "not important" | Fix it or document WHY with `#[allow()]` + comment |
+| Running only `cargo check` and skipping clippy/fmt | Run the FULL `verify.sh` — partial checks miss issues |
 

@@ -1,14 +1,20 @@
+---
+name: rust-core
+description: Foundation skill for safe, idiomatic Rust — ownership, error handling, API design.
+---
+
 # Skill: Rust Core (Safe, idiomatic)
+
+> This is the **foundation skill**. All other Rust skills inherit these rules.
 
 ## Use for
 - API design, ownership/borrowing, error handling, iterators, slices, strings, modules/crates layout.
-- This is the **foundation skill** — all other skills build on these rules.
 
 ## Critical ownership rules (ALWAYS apply)
 1. ALWAYS prefer `&T` / `&mut T` over `.clone()`.
 2. ALWAYS accept `&[T]` instead of `&Vec<T>`, and `&str` instead of `&String` in parameters.
 3. ALWAYS use iterators over index loops — they eliminate bounds checks and are clearer.
-4. NEVER use `unwrap()` or `expect()` in library code. In `#[cfg(test)]` only: allowed.
+4. NEVER use `unwrap()` or `expect()` in library code. In `#[cfg(test)]`: allowed on happy-path assertions.
 5. ALWAYS return `Result<T, E>` for operations that can fail — NEVER panic on expected errors.
 
 ## Ownership patterns
@@ -21,12 +27,13 @@
 ## Error handling
 
 ### Libraries
-- Use `thiserror` to define error enums:
 ```rust
 #[derive(Debug, thiserror::Error)]
-enum MyError {
-    #[error("failed to parse config")]
-    Parse(#[from] serde_json::Error),
+enum AppError {
+    #[error("config parse failed")]
+    Config(#[from] serde_json::Error),
+    #[error("network timeout after {0}s")]
+    Timeout(u64),
 }
 ```
 - Use `#[from]` for automatic `From` conversion between error types.
@@ -43,25 +50,34 @@ enum MyError {
 - Use newtypes to encode invariants: `struct Port(u16)` with validating constructor.
 - Add `#[must_use]` to functions returning `Result` or types that must not be silently discarded.
 - Implement `From<T>`, not `Into<T>` — `Into` is auto-derived.
-- Derive `Debug`, `Clone`, `PartialEq` on all public types — users expect them.
+- Derive `Debug`, `Clone`, `PartialEq` on all public types.
 - Implement `Default` when there is a sensible default value.
 
 ### Patterns for complex APIs
-- Use the Builder pattern for types with 3+ optional parameters.
-- Use typestate for compile-time state machines: `Connection<Disconnected>` → `Connection<Connected>`.
+- Builder pattern for types with 3+ optional parameters.
+- Typestate for compile-time state machines: `Connection<Disconnected>` → `Connection<Connected>`.
 - Parse, don't validate: convert raw data into validated types at boundaries.
 
 ### Future-proofing
-- Use `#[non_exhaustive]` on public enums and structs to allow additive changes.
+- `#[non_exhaustive]` on public enums and structs.
 - Accept `impl AsRef<Path>` / `impl Into<String>` for flexible input types.
 - Return owned data when the return value must outlive the input borrows.
 
 ## Memory awareness
-- Use `Vec::with_capacity(n)` when the size is known or estimable.
-- Use `clone_from()` instead of `x = y.clone()` to reuse existing allocations.
+- `Vec::with_capacity(n)` when the size is known or estimable.
+- `clone_from()` instead of `x = y.clone()` to reuse allocations.
 - Box large enum variants to keep the enum's stack size small (`std::mem::size_of`).
 
 ## Performance
 - NEVER micro-optimize until tests exist and a profiler confirms the bottleneck.
 - NEVER use `unsafe` for performance without a benchmark proving the gain.
+
+## Common mistakes
+
+| Mistake | Fix |
+|---------|-----|
+| Using `Box<dyn Error>` in a library's public API | Define a custom error enum with `thiserror` |
+| Adding `.clone()` without checking if & works | Try `&T` first; clone only when ownership is truly needed |
+| Using `Vec<T>` parameter when `&[T]` suffices | Change signature to `&[T]` — avoids forcing callers to allocate |
+| Forgetting `#[must_use]` on Result-returning fns | Add `#[must_use]` — prevents silent error dropping |
 

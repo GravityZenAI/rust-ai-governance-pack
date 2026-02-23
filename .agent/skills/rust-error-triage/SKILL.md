@@ -5,12 +5,11 @@ description: Systematic diagnosis of rustc error codes and Clippy lints; updates
 
 # Rust Error Triage
 
+> Inherits all rules from `rust-core`. This skill adds error diagnosis procedure.
+
 ## When to use
 - Any time `cargo check`, `cargo test`, or `cargo clippy` produces errors.
-- Complements `rust-compile-loop` — use this skill to diagnose, use compile-loop to iterate.
-
-## Inputs
-- Compiler output (`cargo check` / `cargo test` / clippy output)
+- Complements `rust-compile-loop` — use this to diagnose, compile-loop to iterate fixes.
 
 ## Procedure
 
@@ -30,34 +29,47 @@ description: Systematic diagnosis of rustc error codes and Clippy lints; updates
    | Mutability | E0596, E0594 | Add `mut`, use `RefCell`/`Cell` |
    | Temporaries | E0716 | Bind to variable before borrowing |
 
-3. **Apply** the canonical fix pattern:
+3. **Apply** the canonical fix:
    - Consult `ERROR_PATTERNS.md` first.
-   - If the error is NOT in ERROR_PATTERNS.md, create a new entry with:
-     - Root cause
-     - Canonical fix
-     - Minimal failing snippet
-     - Minimal test proving the fix
+   - If NOT found, create a new entry with: root cause, canonical fix, minimal snippet, minimal test.
 
-4. **Validate**:
+4. **Validate**: `./scripts/verify.sh --fast`
 
-```bash
-./scripts/verify.sh --fast
+5. If still failing, repeat from step (1) on the **new first error**.
+
+## Example: diagnosing E0502
+
+```rust
+// Error: cannot borrow `data` as mutable because it is also borrowed as immutable
+let first = &data[0]; // immutable borrow
+data.push(42);        // mutable borrow — CONFLICT
+println!("{}", first);
+
+// Fix: finish using the immutable borrow before mutating
+let first = data[0];  // copy the value (no borrow kept)
+data.push(42);        // now safe
 ```
-
-5. If still failing, repeat from step (1) using the **new first error**.
 
 ## Fix patterns for error types
 
 ### Library errors
-- Use `thiserror` with `#[error("...")]` for Display and `#[from]` for auto-conversion.
-- Chain underlying causes with `#[source]` to preserve the error chain.
-- When a variant holds a large payload, `Box` it: `ParseError(Box<serde_json::Error>)`.
+- `thiserror` with `#[error("...")]` + `#[from]` for auto-conversion.
+- `#[source]` to preserve error chains.
+- `Box` large payloads: `ParseError(Box<serde_json::Error>)`.
 
 ### Application errors
-- Use `anyhow` with `.context("why it failed")` for quick, informative error propagation.
-- Add `.context()` at module boundaries, NOT on every call.
+- `anyhow` with `.context("why it failed")`.
+- `.context()` at module boundaries, NOT on every call.
 
 ## Warnings vs errors
-- Clippy warnings: fix them immediately or add `#[allow(clippy::...)]` with a comment explaining why.
-- NEVER suppress warnings without a documented justification.
+- Clippy warnings: fix immediately or `#[allow(clippy::...)]` with justification.
+- NEVER suppress warnings without documented justification.
+
+## Common mistakes
+
+| Mistake | Fix |
+|---------|-----|
+| Trying to fix error by type before reading the message | Read the FULL error message — the compiler suggests the fix |
+| Ignoring `rustc --explain Exxxx` | Run it — it gives examples and detailed explanations |
+| Suppressing clippy with `#[allow]` without a comment | ALWAYS add `// Reason: ...` next to `#[allow]` |
 

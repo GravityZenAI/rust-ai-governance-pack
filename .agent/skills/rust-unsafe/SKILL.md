@@ -1,4 +1,11 @@
+---
+name: rust-unsafe
+description: Rules and patterns for unsafe Rust code and FFI boundaries.
+---
+
 # Skill: Rust Unsafe / FFI
+
+> Inherits all rules from `rust-core`. This skill adds unsafe-specific controls.
 
 ## When to activate
 ONLY activate when the task explicitly requires:
@@ -27,27 +34,35 @@ ONLY activate when the task explicitly requires:
 ```rust
 /// # Safety
 ///
-/// - `ptr` must be non-null and properly aligned
-/// - `ptr` must point to a valid `T` for the lifetime `'a`
-/// - The caller must not alias `ptr` mutably
+/// - `ptr` must be non-null and properly aligned for `T`
+/// - `ptr` must point to a valid, initialized `T` for the lifetime `'a`
+/// - The caller must ensure no mutable aliases to `*ptr` exist
 unsafe fn deref_ptr<'a, T>(ptr: *const T) -> &'a T {
     &*ptr
 }
 ```
 
 ## FFI patterns
-- Use `#[repr(transparent)]` on newtypes wrapping a single field for FFI compatibility.
-- Use `PhantomData<T>` for type-level markers (ownership, lifetime binding) at zero runtime cost.
-- Prefer zero-copy patterns with slices and `Bytes` for external data interfaces.
+- `#[repr(transparent)]` on newtypes wrapping a single field for FFI compatibility.
+- `PhantomData<T>` for type-level markers (ownership, lifetime binding) at zero runtime cost.
+- Zero-copy with slices and `Bytes` for external data interfaces.
 
 ## Verification
-- Run Miri: `cargo +nightly miri test`. If Miri is unavailable, document this as a risk.
-- ALWAYS test boundary conditions (null, zero-length, max-length, unaligned).
-- Use `rust-verifier` skill for final verification of unsafe code.
+- Run Miri: `cargo +nightly miri test`. If unavailable, document this as a risk.
+- ALWAYS test boundary conditions: null, zero-length, max-length, unaligned.
+- Use `rust-verifier` for final verification.
 
 ## Required output
 - Exact unsafe surface area: files + line ranges.
 - All invariants listed and documented.
 - Justification: why this CANNOT be done in safe Rust.
-- Evidence: verifier output + Miri output (or explicit waiver with risk note).
+- Evidence: verifier output + Miri output (or waiver with risk note).
+
+## Common mistakes
+
+| Mistake | Fix |
+|---------|-----|
+| Using `unsafe` to bypass the borrow checker | NEVER — the borrow checker is protecting you; find the safe pattern |
+| Writing `unsafe fn` without `/// # Safety` docs | ALWAYS document — it's the contract for callers |
+| Not testing with Miri | Run `cargo +nightly miri test` — it catches UB that tests won't |
 

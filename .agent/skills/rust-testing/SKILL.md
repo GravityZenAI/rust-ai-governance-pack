@@ -1,4 +1,11 @@
+---
+name: rust-testing
+description: Unit, property, and fuzz testing strategies for Rust code.
+---
+
 # Skill: Rust Testing (unit, property, fuzz)
+
+> Inherits all rules from `rust-core`. This skill adds testing strategies.
 
 ## When to use
 - Parsing/serialization, security boundaries, complex business logic, concurrency/async.
@@ -8,7 +15,7 @@
 ## Critical rules
 1. Every bug fix MUST add a regression test — no exceptions.
 2. Tests MUST be deterministic — NEVER use sleep, system time, or non-seeded randomness.
-3. NEVER use `unwrap()` in tests to check error cases — use `assert!(result.is_err())` or pattern matching.
+3. `unwrap()` is allowed on happy-path assertions in tests. For error-path checks, use `assert!(result.is_err())` or pattern matching.
 4. ALWAYS use `#[cfg(test)] mod tests { }` with `use super::*;`.
 
 ## Test structure
@@ -19,14 +26,22 @@ mod tests {
     use super::*;
 
     #[test]
+    fn parse_valid_input_returns_value() {
+        // Arrange
+        let input = "42";
+        // Act
+        let result = parse(input).unwrap(); // unwrap OK — happy path
+        // Assert
+        assert_eq!(result, 42);
+    }
+
+    #[test]
     fn parse_empty_input_returns_error() {
         // Arrange
         let input = "";
-
         // Act
         let result = parse(input);
-
-        // Assert
+        // Assert — NEVER unwrap here
         assert!(result.is_err());
     }
 }
@@ -41,12 +56,12 @@ mod tests {
 | Critical (parsers) | Fuzzing for untrusted input | `cargo-fuzz` |
 
 ## Test naming
-- Use descriptive names: `test_parse_empty_input_returns_error`, not `test1`.
-- Pattern: `test_<function>_<scenario>_<expected_result>`.
+- Pattern: `test_<function>_<scenario>_<expected_result>`
+- Example: `test_parse_empty_input_returns_error`
 
 ## Integration tests
 - Place in `tests/` directory, one file per logical area.
-- Integration tests run as separate binaries — they test the public API.
+- Integration tests test the public API as separate binaries.
 
 ## Mocking
 - Design dependencies behind traits to enable mocking.
@@ -60,5 +75,13 @@ mod tests {
 - Keep `/// # Examples` doc comments as executable tests.
 
 ## Cleanup
-- Use RAII pattern (`Drop`) for test cleanup — create a guard struct that cleans up on drop.
+- Use RAII pattern (`Drop`) for test cleanup.
+
+## Common mistakes
+
+| Mistake | Fix |
+|---------|-----|
+| Using `unwrap()` to assert an error path | Use `assert!(result.is_err())` or `assert_matches!` |
+| Testing implementation details instead of behavior | Test PUBLIC API behavior, not internal methods |
+| Non-deterministic tests (system time, random) | Seed randomness; inject time as a parameter |
 
