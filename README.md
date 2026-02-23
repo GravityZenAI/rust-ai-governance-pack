@@ -1,10 +1,17 @@
-# 🦀 Rust AI Governance Pack
+<div align="center">
 
-> **Make AI coding agents produce Rust that is verifiable, secure by default, and repeatable.**
+# Rust AI Governance Pack
 
-[![License: Apache-2.0](https://img.shields.io/badge/License-Apache_2.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
-[![Rust](https://img.shields.io/badge/Rust-1.75%2B-orange.svg)](https://rust-lang.org)
-[![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](CONTRIBUTING.md)
+### Stop hoping your AI writes correct Rust. Start verifying it.
+
+[![License](https://img.shields.io/badge/License-Apache_2.0-0D1117?style=for-the-badge&logo=apache&logoColor=white)](https://opensource.org/licenses/Apache-2.0)
+[![Rust](https://img.shields.io/badge/Rust_1.75+-CE422B?style=for-the-badge&logo=rust&logoColor=white)](https://rust-lang.org)
+[![Skills](https://img.shields.io/badge/9_Skills-00d4ff?style=for-the-badge&logo=lightning&logoColor=white)](#whats-inside)
+[![Rules](https://img.shields.io/badge/8_Rules-ff6b35?style=for-the-badge&logo=shield&logoColor=white)](#whats-inside)
+[![Katas](https://img.shields.io/badge/20_Katas-7c3aed?style=for-the-badge&logo=target&logoColor=white)](#-training-katas)
+[![PRs Welcome](https://img.shields.io/badge/PRs-Welcome-2ea043?style=for-the-badge)](CONTRIBUTING.md)
+
+</div>
 
 ---
 
@@ -23,34 +30,27 @@ AI coding agents (Claude, Copilot, Cursor, Gemini, etc.) are increasingly writin
 This pack turns "write Rust correctly" into a **verifiable, automated workflow**. Drop it into any Rust repository and your AI coding agent is immediately governed by:
 
 ```
-┌─────────────────────────────────────────────────────┐
-│                GOVERNANCE LAYER                      │
-│                                                      │
-│  📜 Rules (always active)                            │
-│  ├── Rust Contract (definition of done)              │
-│  ├── Output Format (what the agent must return)      │
-│  └── Dependency Policy (no blind crate additions)    │
-│                                                      │
-│  🧠 Skills (on-demand, loaded when relevant)         │
-│  ├── rust-core       → ownership, errors, idioms     │
-│  ├── rust-verifier   → verification loop             │
-│  ├── rust-unsafe     → unsafe/FFI governance         │
-│  ├── rust-supply-chain → dependency hardening        │
-│  └── rust-testing    → unit, property, fuzz          │
-│                                                      │
-│  ⚙️  Verification Gates (automated)                  │
-│  ├── cargo fmt --check                               │
-│  ├── cargo clippy -- -D warnings                     │
-│  ├── cargo test                                      │
-│  ├── cargo audit (RustSec)                           │
-│  ├── cargo deny check (licenses/bans)                │
-│  └── cargo +nightly miri test (if unsafe detected)   │
-│                                                      │
-│  🛡️ Security                                         │
-│  ├── Anti-prompt-injection rule                      │
-│  ├── deny.toml (starter policy)                      │
-│  └── Evidence-based output (no fabrication)          │
-└─────────────────────────────────────────────────────┘
+┌──────────────────────────────────────────────────────────────┐
+│                    GOVERNANCE LAYER                           │
+│                                                              │
+│  ▸ 8 Rules (always active)                                   │
+│    Rust Contract · Output Format · Dependency Policy         │
+│    Ops Security · Operating Loop · Quality Bar               │
+│    Repo Memory · Command Safety                              │
+│                                                              │
+│  ▸ 9 Skills (on-demand, loaded when relevant)                │
+│    rust-core · rust-verifier · rust-unsafe                   │
+│    rust-supply-chain · rust-testing · rust-compile-loop      │
+│    rust-error-triage · rust-kata-coach · rust-refactor-safely│
+│                                                              │
+│  ▸ 7 Verification Gates (automated)                          │
+│    fmt → clippy → test → audit → deny → miri → geiger       │
+│                                                              │
+│  ▸ Security                                                  │
+│    Anti-prompt-injection · deny.toml · Evidence-only output  │
+│                                                              │
+│  ▸ 20 Training Katas (compilable Rust exercises)             │
+└──────────────────────────────────────────────────────────────┘
 ```
 
 ## Quick Start
@@ -170,8 +170,7 @@ flowchart TD
 │   │   ├── rust-compile-loop/SKILL.md  # Incremental compile→test→fix loop
 │   │   ├── rust-error-triage/SKILL.md  # Systematic error diagnosis
 │   │   ├── rust-kata-coach/SKILL.md    # Kata training with scoring
-│   │   ├── rust-refactor-safely/SKILL.md # Test-guided refactoring
-│   │   └── rust-security-audit/SKILL.md  # Security audit checklist
+│   │   └── rust-refactor-safely/SKILL.md # Test-guided refactoring
 │   └── workflows/                      # Guided procedures
 │       ├── rust-verify.md              # Step-by-step verification workflow
 │       ├── kata.md                     # Kata training workflow
@@ -244,7 +243,7 @@ This pack works with any AI coding assistant that supports project-level instruc
 | **Windsurf** | Add to `.windsurfrules` |
 | **Any LLM** | Include rules in system prompt or first message |
 
-## 🥋 Training Katas
+## Training Katas
 
 The [`training/kata_suite/`](training/kata_suite/) directory contains **20 compilable Rust exercises** with tests to benchmark AI agent Rust competency:
 
@@ -319,6 +318,9 @@ Based on research from:
 
 ---
 
-<p align="center">
-  <strong>Stop hoping your AI writes correct Rust. Start verifying it.</strong>
-</p>
+<div align="center">
+  <br>
+  <strong>Rust correctness is not a belief — it's a chain of objective gates.</strong>
+  <br><br>
+  <sub>Built by <a href="https://github.com/GravityZenAI">GravityZen AI</a> · Governed development for the AI era</sub>
+</div>
