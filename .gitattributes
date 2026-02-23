@@ -1,6 +1,4 @@
-# Mark generated/vendored files so GitHub shows correct language stats
+# Only mark truly generated files — scripts are real tools
 assets/*.html linguist-generated=true
 assets/*.png linguist-generated=true
-tools/*.ps1 linguist-vendored=true
-tools/*.sh linguist-vendored=true
 *.md linguist-documentation=true
