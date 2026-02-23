@@ -3,7 +3,7 @@
 mod inner {
     /// Multiply by 3.
     pub fn helper(x: i32) -> i32 {
-        todo!("return x*3")
+        x * 3
     }
 }
 

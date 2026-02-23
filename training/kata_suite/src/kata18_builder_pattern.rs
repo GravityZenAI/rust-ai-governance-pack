@@ -16,18 +16,28 @@ pub struct UserBuilder {
 
 impl UserBuilder {
     pub fn new(name: impl Into<String>) -> Self {
-        todo!("create builder")
+        Self {
+            name: name.into(),
+            age: None,
+            email: None,
+        }
     }
 
     pub fn age(mut self, age: u8) -> Self {
-        todo!("set age")
+        self.age = Some(age);
+        self
     }
 
     pub fn email(mut self, email: impl Into<String>) -> Self {
-        todo!("set email")
+        self.email = Some(email.into());
+        self
     }
 
     pub fn build(self) -> User {
-        todo!("build User")
+        User {
+            name: self.name,
+            age: self.age,
+            email: self.email,
+        }
     }
 }

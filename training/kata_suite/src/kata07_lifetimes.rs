@@ -2,5 +2,9 @@
 
 /// Return the longer of two string slices.
 pub fn longest<'a>(a: &'a str, b: &'a str) -> &'a str {
-    todo!("return the longest slice")
+    if a.len() >= b.len() {
+        a
+    } else {
+        b
+    }
 }

@@ -5,5 +5,13 @@
 ///
 /// Return None if indices are out of range or equal.
 pub fn sum_and_bump_two(v: &mut [i32], i: usize, j: usize) -> Option<i32> {
-    todo!("use split_at_mut to get two &mut safely")
+    if i == j || i >= v.len() || j >= v.len() {
+        return None;
+    }
+    let (lo, hi) = if i < j { (i, j) } else { (j, i) };
+    let (left, right) = v.split_at_mut(hi);
+    let sum = left[lo] + right[0];
+    left[lo] += 1;
+    right[0] += 1;
+    Some(sum)
 }

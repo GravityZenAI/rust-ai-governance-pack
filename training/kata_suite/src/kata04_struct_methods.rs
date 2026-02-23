@@ -7,18 +7,18 @@ pub struct Counter {
 
 impl Counter {
     pub fn new() -> Self {
-        todo!("construct a new counter with value=0")
+        Self { value: 0 }
     }
 
     pub fn inc(&mut self) {
-        todo!("increment by 1")
+        self.value += 1;
     }
 
     pub fn add(&mut self, delta: i32) {
-        todo!("add delta")
+        self.value += delta;
     }
 
     pub fn get(&self) -> i32 {
-        todo!("return current value")
+        self.value
     }
 }

@@ -17,12 +17,12 @@ pub struct Circle {
 
 impl Area for Rectangle {
     fn area(&self) -> f64 {
-        todo!("w * h")
+        self.w * self.h
     }
 }
 
 impl Area for Circle {
     fn area(&self) -> f64 {
-        todo!("pi * r^2")
+        std::f64::consts::PI * self.r * self.r
     }
 }

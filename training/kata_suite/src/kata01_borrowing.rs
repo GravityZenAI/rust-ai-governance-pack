@@ -5,10 +5,10 @@
 /// Constraints:
 /// - Must return a slice (`&str`) into the input (no allocation).
 pub fn first_word(s: &str) -> &str {
-    todo!("implement first_word")
+    s.split_ascii_whitespace().next().unwrap_or("")
 }
 
 /// Count words in `s` using whitespace splitting.
 pub fn count_words(s: &str) -> usize {
-    todo!("implement count_words")
+    s.split_ascii_whitespace().count()
 }

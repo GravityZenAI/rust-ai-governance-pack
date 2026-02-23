@@ -8,5 +8,13 @@ pub enum Command {
 }
 
 pub fn apply(cmds: &[Command]) -> i32 {
-    todo!("apply commands starting from 0")
+    let mut acc = 0;
+    for cmd in cmds {
+        match cmd {
+            Command::Add(n) => acc += n,
+            Command::Sub(n) => acc -= n,
+            Command::Reset => acc = 0,
+        }
+    }
+    acc
 }

@@ -9,14 +9,16 @@ pub struct Bag {
 
 impl Bag {
     pub fn new() -> Self {
-        todo!("create empty bag")
+        Self {
+            items: RefCell::new(Vec::new()),
+        }
     }
 
     pub fn push(&self, x: i32) {
-        todo!("push into inner vec")
+        self.items.borrow_mut().push(x);
     }
 
     pub fn sum(&self) -> i32 {
-        todo!("sum items without violating borrow rules")
+        self.items.borrow().iter().sum()
     }
 }

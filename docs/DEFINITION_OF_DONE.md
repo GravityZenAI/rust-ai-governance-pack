@@ -1,32 +1,30 @@
-# Definition of Done (Rust Agent)
+<document name="definition-of-done" type="policy">
 
-Una tarea Rust no está “Done” hasta que exista evidencia objetiva.
+<summary>Objective evidence required before any Rust task can be marked DONE.</summary>
 
-## Evidencia obligatoria (siempre)
+<checklists>
 
-1) **Comandos ejecutados** (copiados tal cual):
-   - `./scripts/verify.sh` (o `./scripts/verify.sh --fast` durante iteración)
-2) **Output relevante**:
-   - fragmento que muestre éxito: fmt OK, clippy OK, tests OK.
-3) **Diff**:
-   - `git diff` (o PR diff) mostrando cambios.
-4) **Resumen factual**:
-   - qué cambió y por qué.
-5) **Referencia a memoria del repo**:
-   - si arreglaste un error recurrente: link/entrada en `ERROR_PATTERNS.md`.
-   - si tomaste una decisión: entrada en `DECISIONS.md`.
-   - si hiciste bypass: entrada en `EXCEPTIONS.md`.
+<checklist name="mandatory-evidence">
+<item id="1" required="true">Commands executed (copied verbatim): `./scripts/verify.sh` (or `--fast` during iteration).</item>
+<item id="2" required="true">Output relevante: fragment showing success — fmt OK, clippy OK, tests OK.</item>
+<item id="3" required="true">Diff: `git diff` (or PR diff) showing changes.</item>
+<item id="4" required="true">Factual summary: what changed and why.</item>
+<item id="5" required="true">Repo memory reference: if you fixed a recurring error → entry in `ERROR_PATTERNS.md`; if you made a decision → entry in `DECISIONS.md`; if you bypassed a rule → entry in `EXCEPTIONS.md`.</item>
+</checklist>
 
-## Criterios de aprobación
+<checklist name="approval-criteria">
+<item id="1" required="true">`./scripts/verify.sh` exits with code 0.</item>
+<item id="2" required="true">No warnings in clippy (treated as errors).</item>
+<item id="3" required="true">`cargo fmt` passes in check mode.</item>
+<item id="4" required="true">All tests pass.</item>
+</checklist>
 
-- `./scripts/verify.sh` termina en **exit code 0**.
-- No hay warnings en clippy (tratados como error).
-- `cargo fmt` pasa en modo check.
-- Tests pasan.
+<checklist name="failure-criteria">
+<item id="1" required="true">"Funciona en mi cabeza" — no evidence of execution.</item>
+<item id="2" required="true">No evidence of tool execution pasted.</item>
+<item id="3" required="true">Verifier skipped without an approved exception.</item>
+</checklist>
 
-## Criterios de falla
+</checklists>
 
-- “Funciona en mi cabeza”.
-- No hay evidencia de ejecución.
-- Se salta el verificador sin excepción aprobada.
-
+</document>

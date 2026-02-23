@@ -69,7 +69,10 @@ fn kata06_max_of() {
 
 #[test]
 fn kata06_dedup_sorted() {
-    assert_eq!(kata06_generics::dedup_sorted(&[1,1,2,2,2,3]), vec![1,2,3]);
+    assert_eq!(
+        kata06_generics::dedup_sorted(&[1, 1, 2, 2, 2, 3]),
+        vec![1, 2, 3]
+    );
     assert_eq!(kata06_generics::dedup_sorted::<i32>(&[]), Vec::<i32>::new());
 }
 
@@ -81,8 +84,8 @@ fn kata07_longest() {
 
 #[test]
 fn kata08_iterators() {
-    assert_eq!(kata08_iterators::squares(&[1,2,3]), vec![1,4,9]);
-    assert_eq!(kata08_iterators::sum_even(&[1,2,3,4]), 6);
+    assert_eq!(kata08_iterators::squares(&[1, 2, 3]), vec![1, 4, 9]);
+    assert_eq!(kata08_iterators::sum_even(&[1, 2, 3, 4]), 6);
 }
 
 #[test]
@@ -90,7 +93,10 @@ fn kata09_error_propagation() {
     assert_eq!(kata09_error_propagation::read_number("10").unwrap(), 10);
     assert!(kata09_error_propagation::read_number("x").is_err());
 
-    assert_eq!(kata09_error_propagation::parse_and_add("10", "32").unwrap(), 42);
+    assert_eq!(
+        kata09_error_propagation::parse_and_add("10", "32").unwrap(),
+        42
+    );
     assert!(kata09_error_propagation::parse_and_add("10", "x").is_err());
 }
 
@@ -116,16 +122,24 @@ fn kata12_hashmap() {
 #[test]
 fn kata13_strings() {
     assert_eq!(kata13_slices_strings::trim_prefix("foobar", "foo"), "bar");
-    assert_eq!(kata13_slices_strings::trim_prefix("foobar", "baz"), "foobar");
+    assert_eq!(
+        kata13_slices_strings::trim_prefix("foobar", "baz"),
+        "foobar"
+    );
 
-    assert!(kata13_slices_strings::is_ascii_palindrome("A man, a plan, a canal: Panama"));
+    assert!(kata13_slices_strings::is_ascii_palindrome(
+        "A man, a plan, a canal: Panama"
+    ));
     assert!(!kata13_slices_strings::is_ascii_palindrome("rust"));
 }
 
 #[test]
 fn kata14_parsing() {
-    assert_eq!(kata14_parsing::parse_csv_line(" a, b ,c "), vec!["a","b","c"]);
-    assert_eq!(kata14_parsing::parse_pair("10:32").unwrap(), (10,32));
+    assert_eq!(
+        kata14_parsing::parse_csv_line(" a, b ,c "),
+        vec!["a", "b", "c"]
+    );
+    assert_eq!(kata14_parsing::parse_pair("10:32").unwrap(), (10, 32));
     assert!(kata14_parsing::parse_pair("10:").is_err());
 }
 

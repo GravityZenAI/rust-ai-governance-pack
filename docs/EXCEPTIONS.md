@@ -1,22 +1,18 @@
-# EXCEPTIONS
+<document name="exceptions" type="policy">
 
-Este archivo controla bypasses. Si no está aquí, no existe.
+<summary>Registry of approved rule bypasses. If it is not here, it does not exist.</summary>
 
-## Reglas
+<sections>
 
-1) Toda excepción debe incluir:
-   - ID único
-   - Alcance (archivo/módulo)
-   - Justificación
-   - Riesgo
-   - Aprobador humano
-   - Fecha de expiración
-2) Si expira, debe eliminarse o renovarse con nueva aprobación.
+<section name="rules">
+<content>
+1. Every exception MUST include: unique ID, scope (file/module), justification, risk, human approver, expiration date.
+2. If expired, the exception must be removed or renewed with new approval.
+</content>
+</section>
 
----
-
-## Plantilla
-
+<section name="template">
+<content>
 - Exception ID: EXC-YYYY-MM-DD-XXX
 - Scope:
 - What is bypassed:
@@ -25,11 +21,11 @@ Este archivo controla bypasses. Si no está aquí, no existe.
 - Approved by:
 - Expires:
 - Links: (PR, issue)
+</content>
+</section>
 
----
-
-## Ejemplo
-
+<section name="example">
+<content>
 - Exception ID: EXC-2026-02-23-001
 - Scope: `src/parser.rs`
 - What is bypassed: uso de `unwrap()` en ruta imposible según invariantes
@@ -38,4 +34,9 @@ Este archivo controla bypasses. Si no está aquí, no existe.
 - Approved by: @tech-lead
 - Expires: 2026-03-23
 - Links: PR #123
+</content>
+</section>
 
+</sections>
+
+</document>

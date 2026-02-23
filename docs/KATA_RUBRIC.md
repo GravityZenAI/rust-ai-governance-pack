@@ -1,28 +1,38 @@
-# Kata Rubric
+<document name="kata-rubric" type="rubric">
 
-## Aprobar
+<summary>Pass/fail criteria and scoring metrics for Rust training katas.</summary>
 
-- Tests verdes:
-  - `cd training/kata_suite && cargo test`
-- Formato:
-  - `cargo fmt -- --check` (o `./scripts/verify.sh` desde root del repo principal)
-- Lints:
-  - `cargo clippy -- -D warnings`
+<checklists>
 
-## Fallar
+<checklist name="pass-criteria">
+<item id="1" required="true">Tests green: `cd training/kata_suite && cargo test`</item>
+<item id="2" required="true">Format: `cargo fmt -- --check` (or `./scripts/verify.sh` from root)</item>
+<item id="3" required="true">Lints: `cargo clippy -- -D warnings`</item>
+</checklist>
 
-- Cualquier error de compilación.
-- Cualquier test fallido.
-- Cualquier warning de clippy (tratado como error).
-- Diferencias de formato en fmt check.
+<checklist name="fail-criteria">
+<item id="1" required="true">Any compilation error.</item>
+<item id="2" required="true">Any failing test.</item>
+<item id="3" required="true">Any clippy warning (treated as error).</item>
+<item id="4" required="true">Formatting differences in fmt check.</item>
+</checklist>
 
-## Scoring sugerido (para medir convergencia)
+</checklists>
 
-Por kata:
-- `iterations_to_green` = número de ejecuciones de `cargo test` hasta verde.
-- `time_to_green` = minutos hasta verde.
-- `new_error_patterns` = cuántas entradas nuevas se añadieron.
+<sections>
 
-A nivel suite:
-- `kata_pass_rate` = katas verdes / 20.
+<section name="scoring">
+<content>
+Per kata:
+- `iterations_to_green` = number of `cargo test` runs until green.
+- `time_to_green` = minutes until green.
+- `new_error_patterns` = new entries added to ERROR_PATTERNS.md.
 
+Suite level:
+- `kata_pass_rate` = green katas / 20.
+</content>
+</section>
+
+</sections>
+
+</document>

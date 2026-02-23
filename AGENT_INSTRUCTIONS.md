@@ -1,182 +1,159 @@
-# Instrucciones: Conversion a XML
-
-<important_paths>
-BEFORE starting any work, confirm you can access BOTH paths:
-
-1. Omega Optimizer skill (Task A):
-   C:\Users\negro\.gemini\antigravity\skills\omega-optimizer\SKILL.md
-
-2. Rust repo skills (Task B):
-   C:\Users\negro\Sol\proyectos\rust-ai-governance-pack\.agent\skills\
-
-Write in AGENT_NOTES.md:
-- "Task A file accessible: YES/NO"
-- "Task B files accessible: YES/NO"
-
-If Task A file is NOT accessible, skip Task A and do Task B only.
-</important_paths>
+# Instrucciones: Optimizar y convertir a XML el resto del repositorio
 
 <role>
-You have TWO tasks in sequence. Complete Task A FULLY before starting Task B.
-Task A: Convert the Omega Optimizer skill to XML structure.
-Task B: Convert the 9 Rust skills in this repo to XML structure.
+You have THREE tasks in sequence. Complete each FULLY before starting the next.
+Task A: Convert the 8 Rules to XML structure.
+Task B: Convert docs and root markdown files to XML structure.
+Task C: Fix the CI workflow — make ALL katas compile and pass tests.
 </role>
 
 <constraints>
-- Complete Task A FULLY before starting Task B
+- Complete Task A FULLY before starting Task B, and Task B before Task C
 - Document ALL work in AGENT_NOTES.md (clear it first — write fresh)
 - NEVER delete content — restructure using XML tags while preserving all rules
 - XML tags guide AI parsing. Keep content in natural language inside the tags.
-- After EACH task, run: `.\tools\verify-agent-work.ps1`
-- NEVER say "done" until BOTH tasks are complete
+- After ALL tasks, run: `.\tools\verify-agent-work.ps1`
+- NEVER say "done" until ALL three tasks are complete
 </constraints>
-
-<why_xml>
-XML tags help AI agents follow instructions more precisely because:
-1. Clear section boundaries — AI knows exactly where rules start/end
-2. Hierarchy — nested tags show priority and relationships
-3. Parseable — AI can extract specific sections without reading everything
-4. Proven — AGENT_INSTRUCTIONS.md used XML and agents followed it perfectly
-</why_xml>
 
 ---
 
-# TASK A: Convert Omega Optimizer to XML
+# TASK A: Convert 8 Rules to XML
 
-<source_file>
-C:\Users\negro\.gemini\antigravity\skills\omega-optimizer\SKILL.md
-</source_file>
+<source_dir>.agent/rules/</source_dir>
+
+<files>
+1. 00-rust-contract.md
+2. 01-rust-output-format.md
+3. 02-rust-dependency-policy.md
+4. 03-antigravity-ops-security.md
+5. 04-rust-operating-loop.md
+6. 05-rust-quality-bar.md
+7. 06-repo-memory.md
+8. 07-command-safety.md
+</files>
 
 <task_a_instructions>
-1. Read the entire Omega Optimizer SKILL.md
-2. Restructure it using XML tags. The structure should be:
+Rules are CONTRACTS — the AI MUST follow them. Use this XML structure:
 
 ```xml
-<skill name="omega-optimizer" version="3.0">
-  <description>...</description>
+<rule id="XX" name="rule-name" priority="critical|high|medium">
+  <purpose>What this rule prevents or ensures</purpose>
 
-  <workflow>
-    <phase name="diagnosis">...</phase>
-    <phase name="research">...</phase>
-    <phase name="repair">...</phase>
-    <phase name="verification">...</phase>
-    <phase name="adversarial">...</phase>
-  </workflow>
+  <requirements>
+    <req id="1" level="MUST">...</req>
+    <req id="2" level="MUST NOT">...</req>
+    <req id="3" level="SHOULD">...</req>
+  </requirements>
 
-  <agents>
-    <agent id="1" name="analyst">
-      <role>...</role>
-      <objective>...</objective>
-      <instructions>...</instructions>
-      <tools>...</tools>
-      <constraints>...</constraints>
-      <inputs>...</inputs>
-      <outputs>...</outputs>
-      <success_criteria>...</success_criteria>
-    </agent>
-    <!-- repeat for all 5 agents -->
-  </agents>
+  <examples>
+    <example type="correct">...</example>
+    <example type="violation">...</example>
+  </examples>
 
-  <dimensions count="10">
-    <dimension id="1" name="clarity">...</dimension>
-    <!-- repeat for all 10 -->
-  </dimensions>
-
-  <scoring>
-    <scale min="0" max="10" />
-    <total max="100" />
-    <levels>
-      <level range="0-30" label="critical" />
-      <level range="31-50" label="improvable" />
-      <level range="51-75" label="good" />
-      <level range="76-100" label="excellent" />
-    </levels>
-  </scoring>
-
-  <usage>
-    <basic>...</basic>
-    <advanced>...</advanced>
-  </usage>
-
-  <lessons_learned>...</lessons_learned>
-</skill>
+  <enforcement>How to verify compliance</enforcement>
+</rule>
 ```
 
-3. Keep YAML frontmatter at the top (required by the system)
-4. Keep ALL content — just wrap it in XML tags
-5. Test that it is valid XML structure (tags properly opened/closed)
-6. Mark [x] Task A in AGENT_NOTES.md
+Keep YAML frontmatter if present. Preserve ALL content.
+Mark [x] per rule in AGENT_NOTES.md.
 </task_a_instructions>
 
 ---
 
-# TASK B: Convert 9 Rust Skills to XML
+# TASK B: Convert Docs and Root Files to XML
+
+<files>
+1. README.md (keep as-is — this is for humans on GitHub, NOT for AI)
+2. ARCHITECTURE.md
+3. docs/DEFINITION_OF_DONE.md
+4. docs/EXCEPTIONS.md
+5. docs/KATA_RUBRIC.md
+6. CONTRIBUTING.md
+</files>
 
 <task_b_instructions>
-1. For each of the 9 skills in `.agent/skills/*/SKILL.md`:
-2. Restructure using XML tags. The structure for REFERENCE skills is:
+IMPORTANT: Do NOT convert README.md to XML — it must stay human-readable for GitHub.
+
+For the other files, use this XML structure:
 
 ```xml
-<skill name="skill-name">
-  <description>...</description>
-  <when_to_use>...</when_to_use>
-  <inherits from="rust-core" />  <!-- if applicable -->
-
-  <critical_rules>
-    <rule id="1" level="ALWAYS">...</rule>
-    <rule id="2" level="NEVER">...</rule>
-  </critical_rules>
+<document name="file-name" type="architecture|policy|rubric|guide">
+  <summary>One-line purpose</summary>
 
   <sections>
     <section name="...">
       <content>...</content>
-      <code_example language="rust">...</code_example>
     </section>
   </sections>
 
-  <common_mistakes>
-    <mistake id="1">
-      <wrong>...</wrong>
-      <right>...</right>
-    </mistake>
-  </common_mistakes>
-
-  <verification_checkpoints>
-    <checkpoint id="1" command="...">...</checkpoint>
-  </verification_checkpoints>
-
-  <scalability>
-    <level size="small">...</level>
-    <level size="large">...</level>
-  </scalability>
-
-  <integration>
-    <related_skill name="..." relationship="..."/>
-  </integration>
-</skill>
+  <checklists>
+    <checklist name="...">
+      <item id="1" required="true">...</item>
+    </checklist>
+  </checklists>
+</document>
 ```
 
-3. Keep YAML frontmatter at the top
-4. Keep ALL existing content
-5. Mark [x] per skill in AGENT_NOTES.md
+Mark [x] per file in AGENT_NOTES.md.
 </task_b_instructions>
 
-<skills_list>
-1. rust-compile-loop
-2. rust-core
-3. rust-error-triage
-4. rust-kata-coach
-5. rust-refactor-safely
-6. rust-supply-chain
-7. rust-testing
-8. rust-unsafe
-9. rust-verifier
-</skills_list>
+---
+
+# TASK C: Fix CI — Make Katas Compile
+
+<critical>
+The GitHub Actions CI runs `cargo fmt --check`, `cargo clippy -- -D warnings`,
+and `cargo test` on `training/kata_suite/`. ALL THREE must pass.
+</critical>
+
+<task_c_instructions>
+1. Navigate to `training/kata_suite/`
+2. Run `cargo check` — fix ALL compilation errors
+3. Run `cargo fmt --check` — fix ALL formatting issues
+4. Run `cargo clippy -- -D warnings` — fix ALL warnings
+5. Run `cargo test` — fix ALL failing tests
+6. ALL FOUR commands must exit with code 0
+
+DO NOT skip any kata. If a kata has a bug, fix it.
+If a kata is intentionally broken (for training), add `#[ignore]` to the test
+and document why in AGENT_NOTES.md.
+
+After all katas pass, record the full output of `cargo test` in AGENT_NOTES.md.
+</task_c_instructions>
+
+---
+
+<checklist>
+## Task A: Rules to XML
+- [ ] 00-rust-contract.md
+- [ ] 01-rust-output-format.md
+- [ ] 02-rust-dependency-policy.md
+- [ ] 03-antigravity-ops-security.md
+- [ ] 04-rust-operating-loop.md
+- [ ] 05-rust-quality-bar.md
+- [ ] 06-repo-memory.md
+- [ ] 07-command-safety.md
+
+## Task B: Docs to XML
+- [ ] ARCHITECTURE.md
+- [ ] docs/DEFINITION_OF_DONE.md
+- [ ] docs/EXCEPTIONS.md
+- [ ] docs/KATA_RUBRIC.md
+- [ ] CONTRIBUTING.md
+
+## Task C: Fix CI
+- [ ] cargo check passes
+- [ ] cargo fmt --check passes
+- [ ] cargo clippy -- -D warnings passes
+- [ ] cargo test passes
+</checklist>
 
 <success_criteria>
 COMPLETE only when:
-1. Task A: Omega Optimizer converted to XML structure
-2. Task B: All 9 skills converted to XML structure
-3. verify-agent-work.ps1 output pasted showing PASS
-4. "COMPLETADO" at bottom of AGENT_NOTES.md
+1. All 8 rules converted to XML
+2. All 5 docs converted to XML (NOT README)
+3. All 4 cargo commands pass with exit code 0
+4. verify-agent-work.ps1 output pasted showing PASS
+5. "COMPLETADO" at bottom of AGENT_NOTES.md
 </success_criteria>
