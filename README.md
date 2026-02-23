@@ -148,8 +148,8 @@ flowchart TD
     
     H -->|"No"| K
 
-    style A fill:#CE422B,stroke:#fff,color:#fff
-    style K fill:#2ea043,stroke:#fff,color:#fff
+    style A fill:#1a1a2e,stroke:#CE422B,color:#CE422B
+    style K fill:#1a1a2e,stroke:#2ea043,color:#2ea043
     style G fill:#1a1a2e,stroke:#00d4ff,color:#fff
     style H fill:#1a1a2e,stroke:#ff6b35,color:#fff
     style J fill:#1a1a2e,stroke:#ff6b35,color:#fff
