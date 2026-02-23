@@ -1,0 +1,32 @@
+# cargo-deny policy (starter)
+# Docs: https://github.com/EmbarkStudios/cargo-deny
+
+[advisories]
+# deny = ["RUSTSEC-YYYY-NNNN"]
+unmaintained = "warn"
+yanked = "deny"
+ignore = []
+
+[licenses]
+# Adjust to your org policy
+allow = [
+  "Apache-2.0",
+  "MIT",
+  "BSD-2-Clause",
+  "BSD-3-Clause",
+  "ISC",
+  "Zlib",
+]
+deny = []
+copyleft = "deny"
+confidence-threshold = 0.8
+
+[bans]
+multiple-versions = "warn"
+wildcards = "deny"
+deny = []
+
+[sources]
+unknown-registry = "deny"
+unknown-git = "deny"
+allow-git = []

@@ -1,0 +1,26 @@
+name: rust-verify
+
+on:
+  pull_request:
+  push:
+    branches: [ main, master ]
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install Rust toolchain
+        uses: dtolnay/rust-toolchain@stable
+        with:
+          components: rustfmt, clippy
+
+      - name: Install dev tools (audit/deny)
+        run: |
+          cargo install cargo-audit
+          cargo install cargo-deny
+
+      - name: Verify
+        run: |
+          ./tools/verify.sh
