@@ -156,32 +156,55 @@ flowchart TD
 │   │   ├── 00-rust-contract.md         # Definition of DONE + safety defaults
 │   │   ├── 01-rust-output-format.md    # Required output structure
 │   │   ├── 02-rust-dependency-policy.md # Crate addition policy
-│   │   └── 03-antigravity-ops-security.md # Terminal, browser, extension security
+│   │   ├── 03-antigravity-ops-security.md # Terminal, browser, extension security
+│   │   ├── 04-rust-operating-loop.md   # Spec-first, incremental, error memory
+│   │   ├── 05-rust-quality-bar.md      # Quality bar + prohibited patterns
+│   │   ├── 06-repo-memory.md           # Repository memory files system
+│   │   └── 07-command-safety.md        # Command safety restrictions
 │   ├── skills/                         # On-demand knowledge (loaded when relevant)
 │   │   ├── rust-core/SKILL.md          # Ownership, errors, API patterns
 │   │   ├── rust-verifier/SKILL.md      # Verification loop procedure
 │   │   ├── rust-unsafe/SKILL.md        # Unsafe/FFI governance
 │   │   ├── rust-supply-chain/SKILL.md  # Dependency hardening
-│   │   └── rust-testing/SKILL.md       # Unit, property, fuzz testing
+│   │   ├── rust-testing/SKILL.md       # Unit, property, fuzz testing
+│   │   ├── rust-compile-loop/SKILL.md  # Incremental compile→test→fix loop
+│   │   ├── rust-error-triage/SKILL.md  # Systematic error diagnosis
+│   │   ├── rust-kata-coach/SKILL.md    # Kata training with scoring
+│   │   ├── rust-refactor-safely/SKILL.md # Test-guided refactoring
+│   │   └── rust-security-audit/SKILL.md  # Security audit checklist
 │   └── workflows/                      # Guided procedures
-│       └── rust-verify.md              # Step-by-step verification workflow
+│       ├── rust-verify.md              # Step-by-step verification workflow
+│       ├── kata.md                     # Kata training workflow
+│       └── log_decision.md             # Decision logging workflow
 ├── .github/
 │   └── workflows/
 │       └── rust-verify.yml             # CI pipeline (GitHub Actions)
+├── ARCHITECTURE.md                     # Project architecture overview
 ├── docs/
 │   ├── ai/
 │   │   ├── RUST_PLAYBOOK.md            # Persistent playbook for the agent
-│   │   ├── DECISIONS.md                # Dependency decision log
-│   │   └── ERROR_PATTERNS.md           # Known error patterns + fixes
-│   └── AUDIT.md                        # Security audit of this pack
+│   │   ├── DECISIONS.md                # Architecture/style decision log
+│   │   └── ERROR_PATTERNS.md           # 50+ known error patterns + fixes (16KB)
+│   ├── AUDIT.md                        # Security audit of this pack
+│   ├── AUDIT_REPORT.md                 # Detailed audit report
+│   ├── DEFINITION_OF_DONE.md           # Completion criteria
+│   ├── EXCEPTIONS.md                   # Exception log
+│   ├── EXECUTION_PLAN.md               # Execution plan template
+│   └── KATA_RUBRIC.md                  # Kata scoring rubric
 ├── prompts/
 │   └── RUST_TASK_TEMPLATE.md           # Copy-paste task prompt
 ├── tools/
 │   ├── verify.sh                       # Linux/macOS verifier
 │   ├── verify.ps1                      # Windows PowerShell verifier
-│   └── install-dev-tools.sh            # Bootstrap helper
+│   ├── install-dev-tools.sh            # Bootstrap helper
+│   └── record_evidence.sh             # Evidence recording script
+├── training/
+│   └── kata_suite/                     # 20 Rust katas with tests
+│       ├── Cargo.toml
+│       ├── src/ (20 .rs katas + lib.rs)
+│       └── tests/
 ├── katas/
-│   └── README.md                       # 8 training exercises with tests
+│   └── README.md                       # Kata overview and quick reference
 ├── deny.toml                           # cargo-deny starter policy
 └── README.md                           # You are here
 ```
@@ -223,20 +246,36 @@ This pack works with any AI coding assistant that supports project-level instruc
 
 ## 🥋 Training Katas
 
-The [`katas/`](katas/) directory contains practical exercises to benchmark how well your AI agent writes Rust:
+The [`training/kata_suite/`](training/kata_suite/) directory contains **20 compilable Rust exercises** with tests to benchmark AI agent Rust competency:
 
 | Kata | Concept | Error trained against |
 |------|---------|---------------------|
-| 01 | Ownership basics | E0382 (use after move) |
-| 02 | Error handling | `unwrap_used` lint |
-| 03 | Structs + Traits | E0277 (trait not impl) |
-| 04 | Iterators | E0599 (method not found) |
-| 05 | Lifetimes | E0106, E0515 |
-| 06 | Generics + bounds | E0277 |
-| 07 | Clippy compliance | Multiple lints |
-| 08 | Newtype pattern | Logic bugs |
+| 01 | Borrowing | E0382, E0502 |
+| 02 | Ownership | E0382 (use after move) |
+| 03 | Result/Option | `unwrap_used` lint |
+| 04 | Struct methods | E0599 |
+| 05 | Traits | E0277 (trait not impl) |
+| 06 | Generics | E0277, bounds |
+| 07 | Lifetimes | E0106, E0515 |
+| 08 | Iterators | E0599, functional patterns |
+| 09 | Error propagation | `?` operator, custom errors |
+| 10 | Modules | E0425, E0432, visibility |
+| 11 | Enums + match | Pattern matching |
+| 12 | Collections/HashMap | Ownership in collections |
+| 13 | Slices + strings | `&str` vs `String` |
+| 14 | Parsing | Input validation |
+| 15 | RefCell basics | Interior mutability |
+| 16 | Split borrow | E0502, disjoint borrows |
+| 17 | Into/From | Type conversions |
+| 18 | Builder pattern | API design |
+| 19 | Threads | Send/Sync, concurrency |
+| 20 | Small parser | Combinator patterns |
 
-**Kata Pass Rate** = (passed / attempted) × 100% — Use this to measure your AI agent's Rust competency.
+```bash
+cd training/kata_suite && cargo test
+```
+
+**Kata Pass Rate** = (passed / attempted) × 100% — Use this to measure your AI agent's Rust competency. See [KATA_RUBRIC.md](docs/KATA_RUBRIC.md) for scoring details.
 
 ## Why Rust + AI Needs Governance
 
