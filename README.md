@@ -6,6 +6,7 @@
 
 ### Stop hoping your AI writes correct Rust. Start verifying it.
 
+[![Apache 2.0](https://img.shields.io/badge/Apache_2.0-0D1117?style=for-the-badge&logo=apache&logoColor=white)](LICENSE)
 [![Rust](https://img.shields.io/badge/Rust_1.75+-CE422B?style=for-the-badge&logo=rust&logoColor=white)](https://rust-lang.org)
 [![Skills](https://img.shields.io/badge/9_Skills-00d4ff?style=for-the-badge&logo=lightning&logoColor=white)](#whats-inside)
 [![Rules](https://img.shields.io/badge/8_Rules-ff6b35?style=for-the-badge&logo=shield&logoColor=white)](#whats-inside)
