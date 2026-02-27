@@ -3,7 +3,7 @@
 Biblioteca de patrones para diagnóstico rápido.
 
 **Uso recomendado:**
-- Cuando aparezca un error E0xxx: buscar aquí el patrón, aplicar fix canónico, y luego ejecutar `./scripts/verify.sh --fast`.
+- Cuando aparezca un error E0xxx: buscar aquí el patrón, aplicar fix canónico, y luego ejecutar `./tools/verify.sh --fast`.
 - Si el patrón no existe o está incompleto: agregar entrada.
 
 ---

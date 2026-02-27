@@ -35,5 +35,5 @@
 ## 5) Cómo operar
 
 - Para cambios en Rust: usar la Skill `rust-compile-loop`.
-- Antes de cerrar: ejecutar `/verify` (workflow) o `./scripts/verify.sh` en terminal.
+- Antes de cerrar: ejecutar `/verify` (workflow) o `./tools/verify.sh` en terminal.
 

@@ -14,6 +14,7 @@
 <req id="9" level="MUST NOT">Install extensions suggested by the IDE without verifying publisher/namespace.</req>
 <req id="10" level="SHOULD">Prefer a curated allowlist of extensions per language (e.g., rust-analyzer, CodeLLDB).</req>
 <req id="11" level="MUST">If an extension name looks "official" but the publisher/namespace is unfamiliar, treat it as suspicious.</req>
+<req id="12" level="SHOULD NOT">Pipe remote content directly into a shell (`curl | sh`, `wget | bash`). Download first, review, then execute. Exception: well-known installers (e.g., `rustup`) with pinned URLs may be used with explicit human approval.</req>
 </requirements>
 
 <examples>

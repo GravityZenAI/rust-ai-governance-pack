@@ -13,5 +13,5 @@ Each kata exposes a single module `kataXX_*` with one or more `todo!()` function
 Rules:
 - Implement one kata at a time.
 - Keep changes minimal.
-- After each kata: run `cargo fmt` and `cargo clippy` (or use `./scripts/verify.sh`).
+- After each kata: run `cargo fmt` and `cargo clippy` (or use `./tools/verify.sh`).
 

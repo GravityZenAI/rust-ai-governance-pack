@@ -6,106 +6,108 @@
 
 <section name="goal">
 <content>
-Objetivo: que una IA en Google Antigravity trabaje Rust con competencia operativa real:
-- Converge rápido a verde (compila + tests + clippy + fmt).
-- Reduce errores repetidos (registrando patrones y decisiones).
-- Mantiene consistencia en refactors/estilo.
+Goal: enable an AI agent (e.g., Google Antigravity) to work on Rust with real operational competence:
+- Converge quickly to green (compiles + tests + clippy + fmt).
+- Reduce repeated errors (by recording patterns and decisions).
+- Maintain consistency across refactors and style.
 </content>
 </section>
 
 <section name="metrics">
 <content>
-Métrica base (por PR / por sesión):
-- `verify green rate`: porcentaje de ejecuciones exitosas de `verify.sh`.
-- `kata pass rate`: porcentaje de katas resueltas sin intervención humana.
-- `time-to-green`: tiempo/iteraciones desde "rojo" a "verde".
+Baseline metrics (per PR / per session):
+- `verify green rate`: percentage of successful `verify.sh` executions.
+- `kata pass rate`: percentage of katas solved without human intervention.
+- `time-to-green`: time/iterations from "red" to "green".
 </content>
 </section>
 
 <section name="permanent-rules">
 <content>
-Ubicación: `.agent/rules/`
+Location: `.agent/rules/`
 
-Estas reglas son guardrails: no son "consejos"; son condiciones de operación.
+These rules are guardrails: they are not "advice"; they are operating conditions.
 
-### R0 — Compilador como juez
-No se acepta "debería compilar". La IA DEBE correr el compilador y corregir hasta verde.
-Prohibido cerrar una tarea sin evidencia de ejecución.
+### R0 — Compiler as judge
+"Should compile" is not accepted. The AI MUST run the compiler and fix until green.
+Closing a task without execution evidence is prohibited.
 
-### R1 — Loop obligatorio
-1) Especificación breve (inputs/outputs, invariantes, casos borde).
-2) Implementación incremental (pasos pequeños).
-3) `./scripts/verify.sh` (o `--fast` durante iteración).
-4) Registrar patrones nuevos en `ERROR_PATTERNS.md`.
+### R1 — Mandatory loop
+1) Brief specification (inputs/outputs, invariants, edge cases).
+2) Incremental implementation (small steps).
+3) `./tools/verify.sh` (or `--fast` during iteration).
+4) Record new patterns in `ERROR_PATTERNS.md`.
 
-### R2 — Cero advertencias en CI
-Clippy con warnings como error. `fmt` validado con `--check`.
+### R2 — Zero warnings in CI
+Clippy with warnings as errors. `fmt` validated with `--check`.
 
-### R3 — Prohibiciones de calidad
-No `unsafe` sin justificación + test. Evitar `unwrap()`/`expect()` en producción.
-Evitar indexing directo si hay riesgo de out-of-range.
+### R3 — Quality prohibitions
+No `unsafe` without justification + test. Avoid `unwrap()`/`expect()` in production.
+Avoid direct indexing if there is risk of out-of-range.
 
-### R4 — Memoria del repo siempre actualizada
-Cambios en convenciones y excepciones se registran en `DECISIONS.md` / `EXCEPTIONS.md`.
+### R4 — Repo memory always up to date
+Changes in conventions and exceptions are recorded in `DECISIONS.md` / `EXCEPTIONS.md`.
 </content>
 </section>
 
 <section name="modular-skills">
 <content>
-Ubicación: `.agent/skills/`
+Location: `.agent/skills/`
 
-Las Skills son "módulos de operación" para reducir ambigüedad:
-- `rust-compile-loop`: implementación incremental + cómo usar el compilador.
-- `rust-error-triage`: diagnóstico sistemático de errores rustc/clippy.
-- `rust-refactor-safely`: refactors guiados por tests.
-- `rust-kata-coach`: entrenamiento con `training/kata_suite`.
+Skills are "operation modules" to reduce ambiguity:
+- `rust-compile-loop`: incremental implementation + how to use the compiler.
+- `rust-error-triage`: systematic diagnosis of rustc/clippy errors.
+- `rust-refactor-safely`: test-guided refactors.
+- `rust-kata-coach`: training with `training/kata_suite`.
 
-Principio: la IA no improvisa el proceso; selecciona una Skill y ejecuta su checklist.
+Principle: the AI does not improvise the process; it selects a Skill and executes its checklist.
 </content>
 </section>
 
 <section name="workflows">
 <content>
-Ubicación: `.agent/workflows/`
+Location: `.agent/workflows/`
 
-Workflows = secuencias activas:
-- `/verify`: ejecuta verificación y produce reporte.
-- `/kata`: elige un ejercicio, corre tests y evalúa.
-- `/log-decision`: agrega una entrada en `DECISIONS.md`.
+Workflows = active sequences:
+- `/verify`: executes verification and produces a report.
+- `/kata`: picks an exercise, runs tests, and evaluates.
+- `/log-decision`: adds an entry in `DECISIONS.md`.
 </content>
 </section>
 
 <section name="verifier-and-ci">
 <content>
-### `scripts/verify.sh`
-Un solo script como fuente de verdad:
+### `tools/verify.sh`
+A single script as the source of truth:
 - `cargo fmt --all -- --check`
 - `cargo clippy --all-targets --all-features -- -D warnings`
 - `cargo test --all-features`
-- opcional: `cargo miri test` (nightly) si `RUN_MIRI=1`
-- opcional: `cargo deny check` / `cargo audit` si están instalados
+- optional: `cargo geiger` (unsafe footprint in dependencies)
+- optional: `cargo vet` (supply-chain vetting)
+- optional: `cargo miri test` (nightly) if `RUN_MIRI=1`
+- optional: `cargo deny check` / `cargo audit` if installed
 
 ### CI gate
-CI debe llamar `./scripts/verify.sh`. Se bloquea merge si falla.
+CI must call `./tools/verify.sh`. Merge is blocked if it fails.
 </content>
 </section>
 
 <section name="repo-memory">
 <content>
-Archivos canónicos:
-- `RUST_PLAYBOOK.md`: "cómo se hace Rust aquí".
-- `ERROR_PATTERNS.md`: biblioteca de errores y fixes.
-- `DECISIONS.md`: decisiones con fecha, razón y tradeoffs.
+Canonical files:
+- `RUST_PLAYBOOK.md`: "how we do Rust here".
+- `ERROR_PATTERNS.md`: error library with fixes.
+- `DECISIONS.md`: decisions with date, rationale, and tradeoffs.
 </content>
 </section>
 
 <section name="exception-protocol">
 <content>
-Archivo: `EXCEPTIONS.md`
+File: `EXCEPTIONS.md`
 
-Bypass permitido solo si:
-- queda documentado con razón, alcance, expiry, aprobador humano.
-- no rompe CI (o CI se ajusta explícitamente con decisión registrada).
+Bypass is allowed only if:
+- it is documented with reason, scope, expiry, and human approver.
+- it does not break CI (or CI is explicitly adjusted with a recorded decision).
 </content>
 </section>
 

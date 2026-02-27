@@ -198,3 +198,38 @@ fn kata20_small_parser() {
     assert!(kata20_small_parser::sum_expr("1 + x").is_err());
     assert!(kata20_small_parser::sum_expr("1 +").is_err());
 }
+
+// --- Level 2 tests ---
+
+#[test]
+fn kata01_l2_longest_word_and_char_count() {
+    let (longest, count) = kata01_borrowing::longest_word_and_char_count("hello beautiful world");
+    assert_eq!(longest, "beautiful");
+    assert_eq!(count, 19); // "hellobeautifulworld" = 19 chars
+    let (l, c) = kata01_borrowing::longest_word_and_char_count("");
+    assert_eq!(l, "");
+    assert_eq!(c, 0);
+}
+
+#[test]
+fn kata02_l2_maybe_prepend() {
+    assert_eq!(
+        kata02_ownership::maybe_prepend("world".to_string(), "hello "),
+        "hello world"
+    );
+    assert_eq!(
+        kata02_ownership::maybe_prepend("unchanged".to_string(), ""),
+        "unchanged"
+    );
+}
+
+#[test]
+fn kata03_l2_parse_add_divide() {
+    assert_eq!(
+        kata03_result_option::parse_add_divide("10", "20", "5").unwrap(),
+        6
+    );
+    assert!(kata03_result_option::parse_add_divide("10", "20", "0").is_err());
+    assert!(kata03_result_option::parse_add_divide("x", "20", "5").is_err());
+    assert!(kata03_result_option::parse_add_divide("10", "y", "5").is_err());
+}

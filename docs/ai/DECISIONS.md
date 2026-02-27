@@ -15,7 +15,7 @@ Registro de decisiones técnicas. La IA debe consultarlo antes de imponer un est
 
 ## 2026-02-23 — Verificación única (`verify.sh`) como gate
 
-- Decision: `./scripts/verify.sh` es la única fuente de verdad para “verde”.
+- Decision: `./tools/verify.sh` es la única fuente de verdad para “verde”.
 - Context: Evitar que el agente elija combinaciones parciales de checks.
 - Rationale: Un gate único reduce bypass y hace medible el ciclo.
 - Tradeoffs: Puede ser más lento; se habilita `--fast` para iteración.

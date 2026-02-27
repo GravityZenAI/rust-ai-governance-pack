@@ -6,7 +6,7 @@
 
 <checklist name="pass-criteria">
 <item id="1" required="true">Tests green: `cd training/kata_suite && cargo test`</item>
-<item id="2" required="true">Format: `cargo fmt -- --check` (or `./scripts/verify.sh` from root)</item>
+<item id="2" required="true">Format: `cargo fmt -- --check` (or `./tools/verify.sh` from root)</item>
 <item id="3" required="true">Lints: `cargo clippy -- -D warnings`</item>
 </checklist>
 

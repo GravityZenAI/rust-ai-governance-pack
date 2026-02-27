@@ -73,4 +73,21 @@ if [[ -n "$UNSAFE_HITS" ]]; then
   fi
 fi
 
+# Unsafe footprint in dependencies (optional, informational)
+# Note: cargo-geiger does not detect unsafe in macros or build.rs
+if cargo geiger --version >/dev/null 2>&1; then
+  echo "==> cargo geiger (unsafe footprint)"
+  cargo geiger --all-features --output-format ascii 2>/dev/null || echo "WARN: cargo-geiger encountered an error (non-blocking)."
+else
+  fail_missing "cargo-geiger not installed. Install: cargo install cargo-geiger"
+fi
+
+# Supply-chain vetting (optional, recommended alongside cargo-audit)
+if cargo vet --version >/dev/null 2>&1; then
+  echo "==> cargo vet"
+  cargo vet 2>/dev/null || echo "WARN: cargo-vet encountered an error (non-blocking)."
+else
+  fail_missing "cargo-vet not installed. Install: cargo install cargo-vet"
+fi
+
 echo "✅ All gates passed."

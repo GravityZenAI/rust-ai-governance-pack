@@ -45,13 +45,14 @@ This pack turns "write Rust correctly" into a **verifiable, automated workflow**
 │    rust-supply-chain · rust-testing · rust-compile-loop      │
 │    rust-error-triage · rust-kata-coach · rust-refactor-safely│
 │                                                              │
-│  ▸ 7 Verification Gates (automated)                          │
-│    fmt → clippy → test → audit → deny → miri → geiger       │
+│  ▸ 8 Verification Gates (automated)                          │
+│    fmt → clippy → test → audit → deny → miri → geiger → vet │
 │                                                              │
 │  ▸ Security                                                  │
 │    Anti-prompt-injection · deny.toml · Evidence-only output  │
+│    No curl|sh without review · Command safety                │
 │                                                              │
-│  ▸ 20 Training Katas (compilable Rust exercises)             │
+│  ▸ 20 Training Katas + Level 2 challenges                    │
 └──────────────────────────────────────────────────────────────┘
 ```
 
@@ -80,8 +81,8 @@ cargo install cargo-audit cargo-deny
 rustup toolchain install nightly
 rustup +nightly component add miri
 
-# Optional (unsafe footprint)
-cargo install cargo-geiger
+# Optional (unsafe footprint + supply-chain vetting)
+cargo install cargo-geiger cargo-vet
 ```
 
 Or use the bootstrap script:
@@ -216,7 +217,7 @@ flowchart TD
 └── README.md                           # You are here
 ```
 
-## The 7 Verification Gates
+## The 8 Verification Gates
 
 | # | Gate | Tool | What it catches | Required? |
 |:-:|------|------|----------------|:---------:|
@@ -227,6 +228,7 @@ flowchart TD
 | 5 | **Policies** | `cargo deny check` | License violations, banned crates, duplicates | ✅ Always |
 | 6 | **Undefined Behavior** | `cargo +nightly miri test` | Memory bugs, UB in unsafe code | ⚠️ If unsafe |
 | 7 | **Unsafe Footprint** | `cargo-geiger` | Unsafe usage across dependency tree | 💡 Optional |
+| 8 | **Supply-Chain Vet** | `cargo-vet` | Unvetted third-party code | 💡 Optional |
 
 ## Definition of DONE
 
@@ -253,30 +255,32 @@ This pack works with any AI coding assistant that supports project-level instruc
 
 ## Training Katas
 
-The [`training/kata_suite/`](training/kata_suite/) directory contains **20 compilable Rust exercises** with tests to benchmark AI agent Rust competency:
+The [`training/kata_suite/`](training/kata_suite/) directory contains **20 Rust katas with Level 1 + Level 2 challenges** (27 total test cases) to benchmark AI agent Rust competency:
 
-| Kata | Concept | Error trained against |
-|------|---------|---------------------|
-| 01 | Borrowing | E0382, E0502 |
-| 02 | Ownership | E0382 (use after move) |
-| 03 | Result/Option | `unwrap_used` lint |
-| 04 | Struct methods | E0599 |
-| 05 | Traits | E0277 (trait not impl) |
-| 06 | Generics | E0277, bounds |
-| 07 | Lifetimes | E0106, E0515 |
-| 08 | Iterators | E0599, functional patterns |
-| 09 | Error propagation | `?` operator, custom errors |
-| 10 | Modules | E0425, E0432, visibility |
-| 11 | Enums + match | Pattern matching |
-| 12 | Collections/HashMap | Ownership in collections |
-| 13 | Slices + strings | `&str` vs `String` |
-| 14 | Parsing | Input validation |
-| 15 | RefCell basics | Interior mutability |
-| 16 | Split borrow | E0502, disjoint borrows |
-| 17 | Into/From | Type conversions |
-| 18 | Builder pattern | API design |
-| 19 | Threads | Send/Sync, concurrency |
-| 20 | Small parser | Combinator patterns |
+| Kata | Concept | L1 (Benchmark) | L2 (Deliberate Trap) |
+|------|---------|----------------|---------------------|
+| 01 | Borrowing | `first_word`, `count_words` | `longest_word_and_char_count` (double borrow) |
+| 02 | Ownership | `push_suffix`, `append_in_place` | `maybe_prepend` (conditional move) |
+| 03 | Result/Option | `parse_positive`, `safe_div` | `parse_add_divide` (chained `?` propagation) |
+| 04 | Struct methods | `Counter::new/inc/add/get` | — |
+| 05 | Traits | `Area` for `Rectangle`/`Circle` | — |
+| 06 | Generics | `max_of`, `dedup_sorted` | — |
+| 07 | Lifetimes | `longest` | — |
+| 08 | Iterators | `squares`, `sum_even` | — |
+| 09 | Error propagation | `read_number`, `parse_and_add` | — |
+| 10 | Modules | `public_api` | — |
+| 11 | Enums + match | `Command::apply` | — |
+| 12 | Collections/HashMap | `word_frequencies` | — |
+| 13 | Slices + strings | `trim_prefix`, `is_ascii_palindrome` | — |
+| 14 | Parsing | `parse_csv_line`, `parse_pair` | — |
+| 15 | RefCell basics | `Bag` (interior mutability) | — |
+| 16 | Split borrow | `sum_and_bump_two` | — |
+| 17 | Into/From | `Kilometers` → `Meters` | — |
+| 18 | Builder pattern | `UserBuilder` | — |
+| 19 | Threads | `parallel_sum` | — |
+| 20 | Small parser | `sum_expr` | — |
+
+**Level 2 challenges** are deliberately designed traps that exploit common AI mistakes (E0382, E0502, unwrap abuse). The AI agent must detect the pattern and produce idiomatic Rust.
 
 ```bash
 cd training/kata_suite && cargo test

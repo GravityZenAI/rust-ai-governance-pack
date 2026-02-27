@@ -8,7 +8,7 @@ Este plan asume que quieres un sistema “difícil de eludir” y medible.
 2) En Antigravity:
    - habilita Rules/Workflows/Skills desde el workspace (`.agent/`).
    - configura políticas de ejecución (ver `ANTIGRAVITY_SETUP.md`).
-3) Ejecuta `./scripts/verify.sh` una vez (solo para validar toolchain).
+3) Ejecuta `./tools/verify.sh` una vez (solo para validar toolchain).
 
 **Salida:** Antigravity ya ve las reglas y existe un verificador único.
 
@@ -16,7 +16,7 @@ Este plan asume que quieres un sistema “difícil de eludir” y medible.
 
 1) Copia `.github/workflows/ci.yml` (o adapta a tu CI actual).
 2) Define status checks requeridos (branch protection).
-3) Asegura que el gate es **solo** `./scripts/verify.sh`.
+3) Asegura que el gate es **solo** `./tools/verify.sh`.
 
 **Criterio de éxito:** ninguna rama mergea sin `verify green`.
 
