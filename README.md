@@ -339,6 +339,20 @@ Ideas for contributions:
 - Translations (especially Spanish, Chinese, Japanese)
 - Real-world case studies
 
+---
+
+## Ecosystem
+
+rust-ai-governance-pack is part of the GravityZen AI security suite:
+
+| Project | Purpose |
+|---------|---------|
+| [AI-Bastion](https://github.com/GravityZenAI/AI-Bastion) | 8-layer infrastructure defense for AI agents on Linux |
+| [AI-Bastion-Guardian](https://github.com/GravityZenAI/AI-Bastion-Guardian) | Windows-side security for agents in WSL2 |
+| **rust-ai-governance-pack** | Code governance — the rules AI follows when writing Rust |
+
+> **Tip:** Use all three together. rust-ai-governance-pack controls code quality. AI-Bastion secures the environment. Guardian protects the Windows perimeter.
+
 ## License
 
 [Apache License 2.0](LICENSE) — Use it commercially, modify it, distribute it. Just give credit.
